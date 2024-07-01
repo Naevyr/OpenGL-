@@ -27,6 +27,8 @@ void SceneComponent::Render(Scene& scene) {
     {
         bool expand;
         CollapsedEntityComponent::Render("Light " + i, expand);
+            m_displayedLights.insert(i);
+        
         if(expand)
             m_displayedLights.insert(i);
 
