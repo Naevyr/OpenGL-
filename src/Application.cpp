@@ -125,7 +125,7 @@ void Application::Run()
     light.color = glm::vec4(1, 1, 1,0);
     light.position = glm::vec3(0, 10, 0);
     light.intensity = 1.0f;
-    light.type = LightType::POINT;
+    light.type = LightType::DIRECTIONAL;
     light.direction = glm::normalize(glm::vec3(0.000001, -1, 0));
     scene.AddLight(light);
 

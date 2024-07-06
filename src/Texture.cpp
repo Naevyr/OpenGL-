@@ -85,6 +85,19 @@ Texture Texture::CreateTexture(unsigned int openglHandle, unsigned int type) {
 
     return texture;
 }
+Texture Texture::CreateTexture(unsigned int openglHandle,int width, int height, unsigned int type) {
+
+    Texture texture;
+
+    texture.m_textureID = openglHandle;
+    texture.m_virtualHandle = true;
+    texture.m_textureType = type;
+
+    texture.m_width = width;
+    texture.m_height = height;
+
+    return texture;
+}
 
 Texture Texture::AllocateTextureArray(int width, int height, int channels, int count) {
 

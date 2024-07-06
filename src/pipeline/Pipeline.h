@@ -29,6 +29,7 @@ class Pipeline {
 struct RenderSpecifications {
     glm::mat4 projection;
     glm::mat4 view;
-    int width;
-    int height;
+
+    Texture& colorTexture;
+    Texture& depthTexture;
 };

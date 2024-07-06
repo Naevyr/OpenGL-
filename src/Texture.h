@@ -22,6 +22,7 @@ class Texture {
         static Texture LoadTexture(std::string path = "");
         static Texture LoadTextureArray(std::string file_paths[], int count);
         static Texture CreateTexture(unsigned int openglHandle, unsigned int type);
+        static Texture CreateTexture(unsigned int openglHandle,int height, int width, unsigned int type);
         static Texture CreateTexture(int width, int height, int channels);
         static Texture AllocateTextureArray(int width, int height, int channels, int count);
         static Texture LoadCubeMap(std::array<std::string,6> file_paths);
@@ -29,6 +30,9 @@ class Texture {
 
 
         void Bind(unsigned int unit) const;
+        
+        inline unsigned int GetTextureID() const { return m_textureID; }
+        inline int GetChannels() const { return m_channels; }
         inline int GetWidth() const  { return m_width; }
         inline int GetHeight() const { return m_height; }    
 

@@ -6,6 +6,7 @@
 #include "MaterialDefinition.h"
 #include <unordered_map>
 #include <string>
+#include "postprocessing/HDRBloom.h"
 
 class Renderer {
     private: 
@@ -17,6 +18,13 @@ class Renderer {
         std::unordered_map<std::string, unsigned int> m_loadedTextureMap;
 
 
+        int m_firstPassTexture;
+        int m_firstPassDepth;
+
+        
+        HDRBloom m_bloom;
+
+
         glm::mat4 m_Projection, m_View;
 
 
@@ -25,6 +33,10 @@ class Renderer {
 
         unsigned int m_LightBuffer;
 
+
+
+
+        unsigned int m_FirstPassFBO;
 
         
 

@@ -15,6 +15,9 @@ class ForwardPipeline : public Pipeline{
         unsigned int m_ShadowFB;
         unsigned int m_ShadowMap;
         
+
+        unsigned int m_ColorFB;
+
         unsigned int m_LightUBO;
         
 

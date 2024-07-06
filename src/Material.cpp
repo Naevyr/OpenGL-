@@ -15,9 +15,6 @@ Material::Material(const char * vertexPath, const char * fragmentPath) {
     
     Program::Initialize();
 
-
-
-
     std::string vertexCode;
     std::string fragmentCode;
     std::ifstream vShaderFile;

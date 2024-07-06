@@ -1,21 +1,39 @@
 #pragma once
 #include "ComputeShader.h"
+#include "Material.h"
+
 
 template <typename T>
-class PostProcessingEffect{
-    static_assert(std::is_base_of<Program, T>::value, "Post Effect must derive from a program")
-    
-    T m_program;
+class PostProcessingEffect {
 
+   
     public:
-
+        
+        virtual void Initialize(std::string shaderPath);
         virtual void Run(Texture& input, Texture& output);
 };
 
-template <>
+template<>
 class PostProcessingEffect<ComputeShader> {
 
-    public:
+    private: 
+        ComputeShader m_program;
 
+    public:
+        PostProcessingEffect() {}
+        PostProcessingEffect(std::string fragmentShaderPath);
         virtual void Run(Texture& input, Texture& output);
 };
+
+template<>
+class PostProcessingEffect<Material> {
+
+    
+    public:
+        
+        virtual void Initialize(std::string computeShaderPath);
+        virtual void Run(Texture& input, Texture& output);
+        
+};
+
+

@@ -3,13 +3,16 @@
 
 
 #include <glad/glad.h>
-
+#include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
 ComputeShader::ComputeShader(std::string path) {
+    
+    Program::Initialize();
+
     
     unsigned int shader;
     std::string source;
@@ -66,4 +69,10 @@ ComputeShader::ComputeShader(std::string path) {
             std::cout << i;
         throw "Compute shader link failed";
     }
+}
+
+void ComputeShader::Dispatch(glm::ivec3 groupCount) {
+    Bind();
+    glDispatchCompute(groupCount.x, groupCount.y, groupCount.z);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
