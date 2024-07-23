@@ -122,12 +122,14 @@ void Application::Run()
 
 
     Light light;
-    light.color = glm::vec4(1, 1, 1,0);
+    light.color = glm::vec3(1, 0, 1);
     light.position = glm::vec3(0, 10, 0);
     light.intensity = 1.0f;
     light.type = LightType::DIRECTIONAL;
     light.direction = glm::normalize(glm::vec3(0.000001, -1, 0));
     scene.AddLight(light);
+    scene.AddLight(light);
+
 
 
     double previousTime = glfwGetTime();

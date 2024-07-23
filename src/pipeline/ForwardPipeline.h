@@ -13,7 +13,6 @@ class ForwardPipeline : public Pipeline{
         
 
         unsigned int m_ShadowFB;
-        unsigned int m_ShadowMap;
         
 
         unsigned int m_ColorFB;
@@ -22,7 +21,8 @@ class ForwardPipeline : public Pipeline{
         
 
 
-        int m_shadowMapTextureIndex = -1;
+
+        Texture m_shadowMap;
 
         Material m_shadowMaterial;
         std::vector<Material> m_materials;
@@ -36,7 +36,7 @@ class ForwardPipeline : public Pipeline{
 
     public:
 
-        inline ForwardPipeline() {}
+        inline ForwardPipeline() {  }
         void Initialize() override;
         void Render(Scene& scene, RenderSpecifications& specs) override; 
         

@@ -18,8 +18,8 @@ class Renderer {
         std::unordered_map<std::string, unsigned int> m_loadedTextureMap;
 
 
-        int m_firstPassTexture;
-        int m_firstPassDepth;
+        int m_framebufferColor;
+        int m_framebufferDepth;
 
         
         HDRBloom m_bloom;
@@ -40,11 +40,15 @@ class Renderer {
 
         
 
+        Material m_quadMaterial;
+        unsigned int m_quadVAO;
+
         void SetTransformUniform(glm::mat4 projection, glm::mat4 view);
         void SetLightUniform(std::vector<Light>& lights, Environment& environment);
         void SetShadowMapUniform(Scene& scene);
 
         void RenderShadowMap(Scene& scene);
+        void DrawQuad(Texture &texture);
     public:
 
         inline Renderer() { };

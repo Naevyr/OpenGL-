@@ -62,24 +62,27 @@ void main()
 
 
 
-    float diff = 0;
+    vec3 illumination = vec3(0);
+    vec4 albedo = texture(u_Albedo, TexCoords);
+    vec4 normal = texture(u_Normal, TexCoords);
+    
+    
+    
     for(uint i = 0; i < count; ++i) {
         
         vec3 direction = normalize(lights[i].position - FragPos.xyz);
         direction.y = -direction.y;
         float shadow = ShadowCalculation(lights[i].lightSpace,i);                       
-        diff += (max(dot(norm,direction),0.0) * (1-shadow));
+        illumination +=  albedo.rgb * (max(dot(norm,direction),0.0)  * lights[i].color * lights[i].intensity * (1-shadow));
   
     }
-    diff = min(diff,1.0);
-    vec4 albedo = texture(u_Albedo, TexCoords);
-    vec4 normal = texture(u_Normal, TexCoords);
 
-    vec4 color = albedo * diff + albedo * u_EnvironmentLighting * u_EnvironmentLighting.w ; 
+
+    vec4 color = vec4(illumination,1) + u_EnvironmentLighting * u_EnvironmentLighting.w ; 
     
     
 
-    FragColor = vec4(color.xyz,1.0);
+    FragColor = vec4(color.xyz,1);
     //ragColor = texture(albedo, TexCoords);
 
 

@@ -11,7 +11,7 @@
 #include <vector>
 
 
-Material::Material(const char * vertexPath, const char * fragmentPath) {
+Material::Material(std::string vertexPath, std::string fragmentPath) {
     
     Program::Initialize();
 
@@ -113,7 +113,7 @@ void Material::Use() {
     int i = 0;
     for(auto texture : m_textures)
     {
-        (texture.second).get().Bind(i);
+        (texture.second).get().Use(i);
         SetUniform<int>(texture.first,i);
         i++;
     }

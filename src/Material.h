@@ -22,7 +22,7 @@ class Material : public Program {
         void BindProgram();
     public:
         inline Material() {}
-        Material(const char * vertexPath, const char * fragmentPath);
+        Material(std::string vertexPath, std::string fragmentPath);
         
         
         void Use();

@@ -11,6 +11,7 @@ void ForwardPipeline::Initialize() {
 
     glGenFramebuffers(1, &m_ColorFB);
     glBindFramebuffer(GL_FRAMEBUFFER, m_ColorFB);
+    
     glEnable(GL_DEPTH_TEST);
     glDepthMask(GL_TRUE);
     
@@ -21,15 +22,17 @@ void ForwardPipeline::Initialize() {
     glBufferData(GL_UNIFORM_BUFFER, sizeof(LightUniform), nullptr, GL_DYNAMIC_DRAW);
 
 
+    RuntimeTextureSpecs shadowMapSpecs;
+    shadowMapSpecs.width = 256;
+    shadowMapSpecs.height = 256;
+    shadowMapSpecs.format = GL_DEPTH_COMPONENT;
+    shadowMapSpecs.internal_format = GL_DEPTH_COMPONENT24;
+    shadowMapSpecs.encoding = GL_FLOAT;
+    shadowMapSpecs.type = GL_TEXTURE_2D_ARRAY;
+    shadowMapSpecs.depth = 20;
+    m_shadowMap = Texture::CreateTexture(shadowMapSpecs); 
 
-
-    glGenTextures(1, &m_ShadowMap);
-    glBindTexture(GL_TEXTURE_2D_ARRAY, m_ShadowMap);
-    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT, 256, 256, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    
 
     m_shadowMaterial = Material("resources/shaders/shadow.vert", "resources/shaders/shadow.frag");
     
@@ -42,9 +45,9 @@ void ForwardPipeline::Render(Scene& scene, RenderSpecifications& specs) {
 
     RenderShadowMap(scene);
 
-
     glBindFramebuffer(GL_FRAMEBUFFER, m_ColorFB);
 
+    
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, specs.colorTexture.GetTextureID(), 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, specs.depthTexture.GetTextureID(), 0);
 
@@ -105,7 +108,7 @@ void ForwardPipeline::SetLightUniform(std::vector<Light>& lights, Environment& e
 
         glBindBuffer(GL_UNIFORM_BUFFER,m_LightUBO);
 
-        GLuint bindingPoint = 3; // Binding point index, adjust as needed
+        GLuint bindingPoint = 3;
         glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_LightUBO);
 
 
@@ -126,8 +129,12 @@ unsigned int ForwardPipeline::LoadMaterial(MaterialDefinition materialDefinition
     auto material = Material("resources/shaders/standard.vert", "resources/shaders/standard.frag");
     std::string albedoPath = materialDefinition.albedoPath;
     if(local_textures.find(albedoPath) == local_textures.end())
-    {   
-        Texture texture = Texture::LoadTexture(albedoPath);
+    {       
+        LocalTextureSpecs<1> specs;
+        specs.path = {albedoPath};
+        specs.format = GL_RGB;
+        Texture texture = Texture::CreateTexture(specs);
+
         global_textures.push_back(texture);
         local_textures[albedoPath] =  global_textures.size() - 1;
         material.SetTexture("u_Albedo",global_textures[global_textures.size() - 1]);
@@ -141,7 +148,10 @@ unsigned int ForwardPipeline::LoadMaterial(MaterialDefinition materialDefinition
 
     if(local_textures.find(normalPath) == local_textures.end())
     {   
-        Texture texture = Texture::LoadTexture(normalPath);
+        LocalTextureSpecs<1> specs;
+        specs.path = {normalPath};
+        specs.format = GL_RGB;
+        Texture texture = Texture::CreateTexture(specs);
         global_textures.push_back(texture);
         local_textures[normalPath] =  global_textures.size() - 1;
         material.SetTexture("u_Normal",global_textures[global_textures.size() - 1]);
@@ -153,12 +163,8 @@ unsigned int ForwardPipeline::LoadMaterial(MaterialDefinition materialDefinition
     material.SetLightingFlag(materialDefinition.lightingEnabled);
     if(materialDefinition.lightingEnabled)
     {
-        if(m_shadowMapTextureIndex == -1)
-        {
-            global_textures.push_back(Texture::CreateTexture(m_ShadowMap,GL_TEXTURE_2D_ARRAY));
-            m_shadowMapTextureIndex = global_textures.size() - 1;
-        }
-        material.SetTexture("u_ShadowMap", global_textures[m_shadowMapTextureIndex]);
+
+        material.SetTexture("u_ShadowMap", m_shadowMap);
     }
 
 
@@ -172,17 +178,16 @@ void ForwardPipeline::RenderShadowMap(Scene& scene) {
     std::vector<Light>& lights = scene.GetLights();
     
     glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowFB);
-
-    glBindTexture(GL_TEXTURE_2D_ARRAY, m_ShadowMap);
+    m_shadowMap.Bind();
     glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT24, 256, 256, lights.size(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
-;
+
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, 256, 256);
 
     for (size_t i = 0; i < lights.size(); i++)
     {   
-        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_ShadowMap, 0, i);
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_shadowMap.GetTextureID(), 0, i);
         glClear(GL_DEPTH_BUFFER_BIT);
 
 
