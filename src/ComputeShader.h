@@ -9,6 +9,10 @@ class ComputeShader : public Program {
     public:
         inline ComputeShader() {}
         ComputeShader(std::string path);
+        void Dispatch(glm::ivec3 axis);
 
-        void Dispatch(glm::ivec3 axises);
+
+        void SetTexture(unsigned int unit, Texture& texture) override;
+       
+        void SetTexture(unsigned int unit, Texture& texture, int mipmap, unsigned int usage);
 };

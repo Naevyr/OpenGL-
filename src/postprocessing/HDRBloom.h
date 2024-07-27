@@ -2,10 +2,14 @@
 
 #include "PostProcessingEffect.h"
 #include "ComputeShader.h"
-
+#include "SinglePassPostProcessingEffect.h"
+#include <string>
 class HDRBloom : public PostProcessingEffect {
     private:
-        ComputeShader m_brightPass;
+        SinglePassPostProcessingEffect<ComputeShader> m_brightPass;
+
+
+        
         ComputeShader m_downSample;
         ComputeShader m_upSample;
 
@@ -18,7 +22,8 @@ class HDRBloom : public PostProcessingEffect {
 
     public: 
         inline HDRBloom() {}
-        HDRBloom(std::string computeShaderPath);
+        
+        void Initialize() override;
         void Run(Texture& input, Texture& output) override;
         inline ~HDRBloom() {} 
 };

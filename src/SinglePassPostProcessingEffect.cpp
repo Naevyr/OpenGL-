@@ -1,18 +1,50 @@
 #include "SinglePassPostProcessingEffect.h"
+#include "ComputeShader.h"
+#include "Material.h"
 
-#include <glad/glad.h>
-#include <string>
+template <class>
+class SinglePassPostProcessingEffect;
+
+#pragma region Compute
+template<>
+class SinglePassPostProcessingEffect<ComputeShader> : public PostProcessingEffect {
+
+    private: 
+        ComputeShader m_program;
+
+    public:
+
+        void Initialize() override;
+        void Initialize(std::string shaderPath);
+        void Run(Texture& input, Texture& output);
+};
 
 
-SinglePassPostProcessingEffect<ComputeShader>::SinglePassPostProcessingEffect(std::string computeShaderPath) {
+
+void SinglePassPostProcessingEffect<ComputeShader>::Initialize(std::string computeShaderPath) {
     m_program = ComputeShader(computeShaderPath);
 }
 
 void SinglePassPostProcessingEffect<ComputeShader>::Run(Texture& input, Texture& output) {
     m_program.Bind();
-    glBindImageTexture(0, input.GetTextureID(), 0, GL_FALSE, 0, GL_READ_ONLY, GL_RGBA8);
-
-    glBindImageTexture(1, output.GetTextureID(), 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
     
+    m_program.SetTexture(0,input,0,GL_READ_ONLY);
+    m_program.SetTexture(1,input,0,GL_WRITE_ONLY);
+
     m_program.Dispatch({output.GetWidth(), output.GetHeight(), 1});
 }
+
+#pragma endregion Compute
+
+#pragma region Material
+template<>
+class SinglePassPostProcessingEffect<Material> {
+
+    
+    public:
+        
+        void Initialize(std::string fragmentShaderPath);
+        void Run(Texture& input, Texture& output);
+        
+};
+#pragma endregion Material

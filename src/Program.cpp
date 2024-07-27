@@ -24,6 +24,10 @@ void Program::Bind() {
 }
 
 
+void Program::BindBlock(std::string name, unsigned int id) {
+    Bind();
+    glUniformBlockBinding(m_programID, glGetUniformBlockIndex(m_programID, name.c_str()), id);
+}
 
 
 template<>
@@ -72,12 +76,5 @@ void Program::SetUniform(std::string name, int value) {
     Bind();
     unsigned int location = glGetUniformLocation(m_programID, name.c_str());
     glUniform1i(location, value );
-}
-
-
-
-void Program::BindBlock(std::string name, unsigned int id) {
-Bind();
-    glUniformBlockBinding(m_programID, glGetUniformBlockIndex(m_programID, name.c_str()), id);
 }
 

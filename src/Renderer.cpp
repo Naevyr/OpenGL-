@@ -36,7 +36,7 @@ void Renderer::Init(int width, int height) {
 
     m_textures.reserve(10);
     
-    m_bloom = HDRBloom("resources/shaders/c_bloom.glsl");
+    m_bloom.Initialize();
     
     RuntimeTextureSpecs framebufferSpecs;
     framebufferSpecs.width = 800;
@@ -209,3 +209,4 @@ void Renderer::DrawQuad(Texture &texture) {
     m_quadMaterial.Use();
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
+

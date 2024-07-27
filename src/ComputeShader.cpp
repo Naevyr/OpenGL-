@@ -76,3 +76,12 @@ void ComputeShader::Dispatch(glm::ivec3 groupCount) {
     glDispatchCompute(groupCount.x, groupCount.y, groupCount.z);
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
+
+void SetTexture(unsigned int unit, Texture& texture)
+{
+    
+}
+void SetTexture(unsigned int unit, Texture& texture, int mipmap, unsigned int usage) {
+    
+    glBindImageTexture(unit, texture.GetTextureID(), mipmap, GL_FALSE, 0, usage, texture.GetFormat());
+}

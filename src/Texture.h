@@ -49,7 +49,8 @@ class Texture {
     private:
         unsigned int m_textureID;
         unsigned int m_textureType;
-
+        
+        unsigned int m_format;
 
         int m_width;
         int m_height;
@@ -77,7 +78,8 @@ class Texture {
         
         inline unsigned int GetTextureID() const { return m_textureID; }
         inline int GetWidth() const  { return m_width; }
-        inline int GetHeight() const { return m_height; }    
+        inline int GetHeight() const { return m_height; } 
+        inline unsigned int GetFormat() const {return m_format; }   
 
         void TargetMipMap(unsigned int level);
         

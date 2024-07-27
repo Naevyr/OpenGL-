@@ -19,6 +19,9 @@ Texture Texture::CreateTexture(RuntimeTextureSpecs specs) {
 
     texture.m_width = specs.width;
     texture.m_height = specs.height;
+
+    
+    texture.m_format = specs.internal_format;
     
     
     
@@ -55,6 +58,8 @@ Texture Texture::CreateTexture(VirtualTextureSpecs specs) {
     
     texture.m_width = specs.width;
     texture.m_height = specs.height;
+
+    texture.m_format = specs.internal_format;
 
     return texture;
 }
