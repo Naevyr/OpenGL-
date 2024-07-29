@@ -37,11 +37,12 @@ void Renderer::Init(int width, int height) {
     m_textures.reserve(10);
     
     m_bloom.Initialize();
+    m_blur.Initialize();
     
     RuntimeTextureSpecs framebufferSpecs;
     framebufferSpecs.width = 800;
     framebufferSpecs.height = 600;
-    framebufferSpecs.internal_format = GL_RGBA16F;
+    framebufferSpecs.internal_format = GL_RGBA32F;
     framebufferSpecs.encoding = GL_FLOAT;
 
 
@@ -70,6 +71,18 @@ void Renderer::Init(int width, int height) {
     glGenFramebuffers(1, &m_FirstPassFBO);
 
 
+    RuntimeTextureSpecs framebufferSpecs2;
+    framebufferSpecs2.width = 800;
+    framebufferSpecs2.height = 600;
+    framebufferSpecs2.internal_format = GL_RGBA32F;
+    framebufferSpecs2.encoding = GL_FLOAT;
+
+
+    m_textures.push_back(
+        Texture::CreateTexture(framebufferSpecs2)
+    );
+
+    m_framebufferColor2 = m_textures.size() - 1;
 
     m_quadMaterial = Material("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     glGenVertexArrays(1,&m_quadVAO);
@@ -107,13 +120,14 @@ void Renderer::Render(Scene& scene) {
 
    
     auto skyboxMaterial = m_materials[skybox.getMaterialIndex()];
-    skyboxMaterial.Use();
+    skyboxMaterial.Bind();
     skyboxMaterial.SetUniform<glm::mat4>("u_Projection", m_Projection);
     skyboxMaterial.SetUniform<glm::mat4>("u_View", m_View);
     skybox.Draw(skyboxMaterial);
     
+    m_bloom.Run(m_textures[m_framebufferColor], m_textures[m_framebufferColor2]);
     
-    DrawQuad(m_textures[m_framebufferColor]);
+    DrawQuad(m_textures[m_framebufferColor2]);
 }
 
 
@@ -136,7 +150,7 @@ unsigned int Renderer::LoadSkyboxMaterial(std::string cubemapFolder ) {
     auto material = Material("resources/shaders/skybox.vert", "resources/shaders/skybox.frag");
 
     
-    material.SetTexture("u_Skybox",LoadCubeMap(cubemapFolder));
+    material.SetUniform<Texture&>("u_Skybox",LoadCubeMap(cubemapFolder));
     
     m_materials.push_back(material);
 
@@ -205,8 +219,8 @@ void Renderer::DrawQuad(Texture &texture) {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDisable(GL_DEPTH_TEST);
     glBindVertexArray(m_quadVAO);
-    m_quadMaterial.SetTexture("u_Texture", texture);
-    m_quadMaterial.Use();
+    m_quadMaterial.SetUniform<Texture&>("u_Texture", texture);
+    m_quadMaterial.Bind();
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 

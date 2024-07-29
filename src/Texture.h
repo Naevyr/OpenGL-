@@ -51,6 +51,8 @@ class Texture {
         unsigned int m_textureType;
         
         unsigned int m_format;
+        unsigned int m_internalFormat;
+
 
         int m_width;
         int m_height;
@@ -62,8 +64,8 @@ class Texture {
         inline Texture() {}
         
         template <size_t N = 1>
+
         static Texture CreateTexture(LocalTextureSpecs<N> specs);
-  
         static Texture CreateTexture(VirtualTextureSpecs specs);
         static Texture CreateTexture(RuntimeTextureSpecs specs);
         
@@ -73,15 +75,17 @@ class Texture {
 
 
         inline void Bind() { glBindTexture(m_textureType, m_textureID); } 
-        void Use(unsigned int unit) const;
-
+ 
         
         inline unsigned int GetTextureID() const { return m_textureID; }
         inline int GetWidth() const  { return m_width; }
         inline int GetHeight() const { return m_height; } 
         inline unsigned int GetFormat() const {return m_format; }   
+        inline unsigned int GetInternalFormat() const {return m_internalFormat; }   
 
-        void TargetMipMap(unsigned int level);
+        inline unsigned int GetTextureType() const { return m_textureType; }
+
+
         
 
 };

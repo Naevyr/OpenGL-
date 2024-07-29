@@ -106,16 +106,4 @@ Material::Material(std::string vertexPath, std::string fragmentPath) {
 
 }
 
-void Material::Use() {
-    Program::Bind();
 
-
-    int i = 0;
-    for(auto texture : m_textures)
-    {
-        (texture.second).get().Use(i);
-        SetUniform<int>(texture.first,i);
-        i++;
-    }
-        
-}

@@ -7,6 +7,8 @@
 #include <unordered_map>
 #include <string>
 #include "postprocessing/HDRBloom.h"
+#include "postprocessing/Blur.h"
+
 
 class Renderer {
     private: 
@@ -19,11 +21,12 @@ class Renderer {
 
 
         int m_framebufferColor;
+        int m_framebufferColor2;
         int m_framebufferDepth;
 
         
         HDRBloom m_bloom;
-
+        Blur m_blur;
 
         glm::mat4 m_Projection, m_View;
 

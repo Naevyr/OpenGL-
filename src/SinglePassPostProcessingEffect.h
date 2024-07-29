@@ -1,19 +1,21 @@
 #pragma once
 
 #include "PostProcessingEffect.h"
-// #include "SinglePassPostProcessingEffect.inl"
 
-template <typename T>
+
+template <class T>
 class SinglePassPostProcessingEffect : public PostProcessingEffect {
 
-   
+    protected: 
+        T m_program;
+
     public:
         inline void Initialize() override { throw "Please use the correct overload."; } 
-        virtual Initialize(std::string shaderPath);
-        virtual void Run(Texture& input, Texture& output);
+        void Initialize(std::string shaderPath);
+        void Run(Texture& input, Texture& output);
 };
 
 
 
-
+#include "SinglePassPostProcessingEffect.inl"
 

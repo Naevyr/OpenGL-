@@ -208,7 +208,7 @@ void Application::processMovement(double deltaTime, glm::vec3 * direction, glm::
     double xpos, ypos;
     glfwGetCursorPos(m_window, &xpos, &ypos );
     
-    *rotation = glm::vec2((xpos  - m_width / 2),  ypos - m_height/ 2 );
+    *rotation = glm::vec2((xpos   - m_width / 2) * deltaTime,  (ypos  - m_height/ 2 ) * deltaTime);
 
 
     glfwSetCursorPos(m_window, m_width / 2, m_height / 2);

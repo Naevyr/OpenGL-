@@ -21,7 +21,8 @@ Texture Texture::CreateTexture(RuntimeTextureSpecs specs) {
     texture.m_height = specs.height;
 
     
-    texture.m_format = specs.internal_format;
+    texture.m_format = specs.format;
+    texture.m_internalFormat = specs.internal_format;
     
     
     
@@ -62,18 +63,4 @@ Texture Texture::CreateTexture(VirtualTextureSpecs specs) {
     texture.m_format = specs.internal_format;
 
     return texture;
-}
-
-
-
-
-void Texture::Use(unsigned int unit) const
-{
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(m_textureType, m_textureID);
-}
-
-
-void Texture::TargetMipMap(unsigned int level) {
-
 }

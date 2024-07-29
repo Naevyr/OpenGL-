@@ -12,7 +12,7 @@ class ComputeShader : public Program {
         void Dispatch(glm::ivec3 axis);
 
 
-        void SetTexture(unsigned int unit, Texture& texture) override;
-       
+        void SetTexture(unsigned int unit, Texture& texture);
+    
         void SetTexture(unsigned int unit, Texture& texture, int mipmap, unsigned int usage);
 };

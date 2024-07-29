@@ -19,8 +19,18 @@ void Program::Bind() {
     GLint currentProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
 
-    if(currentProgram != m_programID)
+    if(currentProgram == m_programID)
+        return;
+
+
         glUseProgram(m_programID);
+
+
+    for (auto &&texture : m_textureUnits)
+    {
+        SetTexture(texture.first, texture.second.unit,texture.second.type, texture.second.textureID);
+    }
+    
 }
 
 
@@ -78,3 +88,26 @@ void Program::SetUniform(std::string name, int value) {
     glUniform1i(location, value );
 }
 
+
+template<>
+void Program::SetUniform(std::string name, Texture& value) {
+
+    
+    Bind();
+    if(m_textureUnits.count(name) == 0)
+        m_textureUnits[name] = TextureBinding(name, m_textureUnits.size(), value.GetTextureID(), value.GetTextureType());
+
+
+
+    SetTexture(name, m_textureUnits[name].unit, m_textureUnits[name].type, value.GetTextureID());
+
+}
+
+void Program::SetTexture(std::string name, unsigned int unit,unsigned int type, unsigned int textureID) {
+    
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(type, textureID);
+
+    unsigned int location = glGetUniformLocation(m_programID, name.c_str());
+    glUniform1i(location,  m_textureUnits[name].unit);
+}

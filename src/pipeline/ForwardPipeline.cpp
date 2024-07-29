@@ -62,7 +62,7 @@ void ForwardPipeline::Render(Scene& scene, RenderSpecifications& specs) {
 
     {
         auto material = m_materials[mesh.getMaterialIndex()];
-        material.Use();
+        material.Bind();
         mesh.Draw(material);
     }   
 }
@@ -137,10 +137,10 @@ unsigned int ForwardPipeline::LoadMaterial(MaterialDefinition materialDefinition
 
         global_textures.push_back(texture);
         local_textures[albedoPath] =  global_textures.size() - 1;
-        material.SetTexture("u_Albedo",global_textures[global_textures.size() - 1]);
+        material.SetUniform<Texture&>("u_Albedo",global_textures[global_textures.size() - 1]);
     }
     else    
-        material.SetTexture("u_Albedo", global_textures[local_textures[albedoPath]]);
+        material.SetUniform<Texture&>("u_Albedo", global_textures[local_textures[albedoPath]]);
 
     
 
@@ -154,17 +154,17 @@ unsigned int ForwardPipeline::LoadMaterial(MaterialDefinition materialDefinition
         Texture texture = Texture::CreateTexture(specs);
         global_textures.push_back(texture);
         local_textures[normalPath] =  global_textures.size() - 1;
-        material.SetTexture("u_Normal",global_textures[global_textures.size() - 1]);
+        material.SetUniform<Texture&>("u_Normal",global_textures[global_textures.size() - 1]);
     }
     else
-        material.SetTexture("u_Normal", global_textures[local_textures[normalPath]]);
+        material.SetUniform<Texture&>("u_Normal", global_textures[local_textures[normalPath]]);
      
 
     material.SetLightingFlag(materialDefinition.lightingEnabled);
     if(materialDefinition.lightingEnabled)
     {
 
-        material.SetTexture("u_ShadowMap", m_shadowMap);
+        material.SetUniform<Texture&>("u_ShadowMap", m_shadowMap);
     }
 
 
@@ -219,7 +219,7 @@ void ForwardPipeline::RenderShadowMap(Scene& scene) {
         glm::mat4 lightSpaceMatrix =   lightProjectionMatrix *  lightViewMatrix;   
         
         scene.GetLights()[i].lightSpaceMatrix = lightSpaceMatrix;
-        m_shadowMaterial.Use();
+        m_shadowMaterial.Bind();
         m_shadowMaterial.SetUniform<glm::mat4>("u_LightSpace", lightSpaceMatrix);
 
 

@@ -7,15 +7,16 @@
 class HDRBloom : public PostProcessingEffect {
     private:
         SinglePassPostProcessingEffect<ComputeShader> m_brightPass;
-
-
         
+
+
+        ComputeShader m_blur;
         ComputeShader m_downSample;
         ComputeShader m_upSample;
+        ComputeShader m_add;
 
-
-        Texture m_brightPassOutput;
-        Texture m_upsampledOutput;
+        Texture m_workTexture;
+        Texture m_temporary;
         
 
         float m_bloomThreshold;
