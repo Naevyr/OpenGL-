@@ -14,5 +14,5 @@ class ComputeShader : public Program {
 
         void SetTexture(unsigned int unit, Texture& texture);
     
-        void SetTexture(unsigned int unit, Texture& texture, int mipmap, unsigned int usage);
+        void SetTexture(unsigned int unit, Texture& texture, int mipmap, unsigned int usage, std::string samplerName = "");
 };

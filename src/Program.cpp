@@ -109,5 +109,5 @@ void Program::SetTexture(std::string name, unsigned int unit,unsigned int type, 
     glBindTexture(type, textureID);
 
     unsigned int location = glGetUniformLocation(m_programID, name.c_str());
-    glUniform1i(location,  m_textureUnits[name].unit);
+    glUniform1i(location,  unit);
 }

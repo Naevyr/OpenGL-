@@ -81,7 +81,23 @@ void ComputeShader::SetTexture(unsigned int unit, Texture& texture)
 {
     ComputeShader::SetTexture(unit, texture, 0, GL_READ_WRITE);
 }
-void ComputeShader::SetTexture(unsigned int unit, Texture& texture, int mipmap, unsigned int usage) {
+void ComputeShader::SetTexture(unsigned int unit, Texture& texture, int mipmap, unsigned int usage, std::string samplerName) {
     
-    glBindImageTexture(unit, texture.GetTextureID(), mipmap, GL_FALSE, 0, usage, texture.GetInternalFormat());
+    Bind();
+
+    if(samplerName == "")
+    {
+        glBindImageTexture(unit, texture.GetTextureID(), mipmap, GL_FALSE, 0, usage, texture.GetInternalFormat());
+        return;
+    }   
+    
+
+    glActiveTexture(GL_TEXTURE0 + unit); 
+    
+    glBindTexture(texture.GetTextureType(), texture.GetTextureID());
+
+    GLint inputTexLocation = glGetUniformLocation(m_programID, samplerName.c_str());
+    glUniform1i(inputTexLocation, unit);  
+
+    SetUniform<int>("mipmapLevel", mipmap);
 }

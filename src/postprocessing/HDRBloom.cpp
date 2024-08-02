@@ -38,9 +38,9 @@ void HDRBloom::Run(Texture& input, Texture& output) {
 
     m_brightPass.Run(input, m_temporary);
 
-    m_blur.SetTexture(0, m_temporary, 0, GL_READ_ONLY);
+    m_blur.SetTexture(0, m_temporary, 0, GL_READ_ONLY, "u_input");
     m_blur.SetTexture(1, m_workTexture, 0, GL_WRITE_ONLY);
-    m_blur.SetUniform("u_blurSize", 10);
+    m_blur.SetUniform("u_blurSize", 4);
     m_blur.Dispatch({m_workTexture.GetWidth(), m_workTexture.GetHeight() , 1});
     
 
@@ -52,9 +52,9 @@ void HDRBloom::Run(Texture& input, Texture& output) {
         m_downSample.SetTexture(1, m_temporary, i, GL_WRITE_ONLY);
         m_downSample.Dispatch({m_workTexture.GetWidth() /  pow(2,i), m_workTexture.GetHeight() /  pow(2,i), 1});
 
-        m_blur.SetTexture(0, m_temporary, i, GL_READ_ONLY);
+        m_blur.SetTexture(0, m_temporary, i, GL_READ_ONLY, "u_input");
         m_blur.SetTexture(1, m_workTexture, i, GL_WRITE_ONLY);
-        m_blur.SetUniform("u_blurSize", 30);
+        m_blur.SetUniform("u_blurSize", 4);
         
         m_blur.Dispatch({m_workTexture.GetWidth() /  pow(2,i), m_workTexture.GetHeight() /  pow(2,i), 1});
         
