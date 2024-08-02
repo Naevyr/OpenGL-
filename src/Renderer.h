@@ -3,7 +3,6 @@
 #include "Scene.h"
 #include "Material.h"
 #include "pipeline/ForwardPipeline.h"
-#include "MaterialDefinition.h"
 #include <unordered_map>
 #include <string>
 #include "postprocessing/HDRBloom.h"
@@ -49,6 +48,10 @@ class Renderer {
         Material m_quadMaterial;
         unsigned int m_quadVAO;
 
+
+
+
+
         void SetTransformUniform(glm::mat4 projection, glm::mat4 view);
         void SetLightUniform(std::vector<Light>& lights, Environment& environment);
         void SetShadowMapUniform(Scene& scene);
@@ -69,7 +72,7 @@ class Renderer {
         Texture& LoadCubeMap(std::string folder_path);
         inline Texture& GetTexture(unsigned int index) { return m_textures[index]; }
 
-        unsigned int LoadMaterial(MaterialDefinition materialDefinition);
+        unsigned int LoadMaterial(MaterialDescription materialDefinition);
         unsigned int LoadSkyboxMaterial(std::string cubemapFolder);
 
         inline ~Renderer() { };

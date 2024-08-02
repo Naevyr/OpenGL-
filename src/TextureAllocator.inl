@@ -6,7 +6,7 @@ class Texture;
 
 
 template <size_t N>
-Texture Texture::CreateTexture(LocalTextureSpecs<N> specs)
+TextureHandle TextureAllocator::CreateTexture(LocalTextureSpecs<N> specs)
 {
 
 

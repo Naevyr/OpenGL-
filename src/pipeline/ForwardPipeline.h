@@ -41,7 +41,7 @@ class ForwardPipeline : public Pipeline{
         void Render(Scene& scene, RenderSpecifications& specs) override; 
         
 
-        unsigned int LoadMaterial(MaterialDefinition materialDefinition, std::unordered_map<std::string, unsigned int>& local_textures,  std::vector<Texture>& global_textures) override;
+        unsigned int LoadMaterial(MaterialDescription materialDefinition, std::unordered_map<std::string, unsigned int>& local_textures,  std::vector<Texture>& global_textures) override;
 
         void RenderShadowMap(Scene& scene);
         

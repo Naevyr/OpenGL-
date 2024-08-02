@@ -122,7 +122,7 @@ void ForwardPipeline::SetLightUniform(std::vector<Light>& lights, Environment& e
 }
 
 
-unsigned int ForwardPipeline::LoadMaterial(MaterialDefinition materialDefinition, std::unordered_map<std::string, unsigned int>& local_textures, std::vector<Texture>& global_textures) {
+unsigned int ForwardPipeline::LoadMaterial(MaterialDescription materialDefinition, std::unordered_map<std::string, unsigned int>& local_textures, std::vector<Texture>& global_textures) {
 
 
 

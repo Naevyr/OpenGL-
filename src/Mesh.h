@@ -7,11 +7,13 @@
 #include <glm/gtc/quaternion.hpp>
 
 
+
 class Mesh
 {
+    
     private:
-        unsigned int m_meshID;
-        VertexArray m_vertexArray;
+
+    
         IndexBuffer m_indexBuffer;
 
         unsigned int m_materialIndex;
@@ -21,6 +23,8 @@ class Mesh
         glm::quat m_orientation = glm::quat(0, 0, 0, 1);
         
     public:
+
+
         Mesh(const char * filename, unsigned int materialIndex);
         
         
@@ -35,6 +39,12 @@ class Mesh
         inline void setOrientation(glm::quat orientation) { m_orientation = orientation; }
 
         inline unsigned int getMaterialIndex() { return m_materialIndex; }
+
+
+        enum Type{
+            STATIC,
+            DYNAMIC
+        };
 
         
 };

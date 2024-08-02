@@ -7,7 +7,6 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 #include <vector>
-#include <MaterialDefinition.h>
 
 
 
@@ -20,7 +19,7 @@ class Pipeline {
         
 
         //Every pipeline should their own implementation of a material
-        virtual unsigned int LoadMaterial(MaterialDefinition materialDefs, std::unordered_map<std::string, unsigned int>& local_textures,  std::vector<Texture>& global_textures) = 0;
+        virtual unsigned int LoadMaterial(MaterialDescrip materialDefs, std::unordered_map<std::string, unsigned int>& local_textures,  std::vector<Texture>& global_textures) = 0;
 };
 
 

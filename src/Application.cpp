@@ -80,7 +80,7 @@ Application::~Application() {
 void Application::Run() 
 {
 
-    MaterialDefinition defsTextured;
+    MaterialDescription defsTextured;
     defsTextured.albedoPath = "resources/textures/albedo.png";
     defsTextured.normalPath = "resources/textures/normal.png";
     defsTextured.lightingEnabled = true;
@@ -108,7 +108,7 @@ void Application::Run()
     scene.AddMesh(cube);
 
     
-    MaterialDefinition defaultMaterial = MaterialDefinition();
+    MaterialDescription defaultMaterial = MaterialDescription();
     defaultMaterial.lightingEnabled = true;
 
     Mesh plane = Mesh("resources/3D/cube.obj",m_renderer.LoadMaterial(defaultMaterial));

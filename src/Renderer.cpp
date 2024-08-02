@@ -163,7 +163,7 @@ unsigned int Renderer::LoadSkyboxMaterial(std::string cubemapFolder ) {
 }
 
 
-unsigned int Renderer::LoadMaterial(MaterialDefinition defs) 
+unsigned int Renderer::LoadMaterial(MaterialDescription defs) 
 {
     return m_pipeline.LoadMaterial(defs, m_loadedTextureMap, m_textures);
 }
