@@ -1,10 +1,10 @@
 #include "MeshComponent.h"
 #include <imgui/imgui.h>
 
-void MeshComponent::Render(Mesh& mesh, bool &close) {
+void MeshComponent::Render(Mesh& mesh, bool* keepOpen) {
 
 
-    ImGui::Begin("Mesh",&close);
+    ImGui::Begin("Mesh",keepOpen);
     glm::vec3 position = mesh.getPosition();
     ImGui::DragFloat3("Mesh Position", &position[0]);
 
@@ -17,5 +17,5 @@ void MeshComponent::Render(Mesh& mesh, bool &close) {
 
     ImGui::End();
 
-    close = !close;
+
 }

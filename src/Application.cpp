@@ -135,6 +135,8 @@ void Application::Run()
     double previousTime = glfwGetTime();
     bool toggleSpeed = false;
 
+    PostProcessingEffects effects;
+
 
     while (!glfwWindowShouldClose(m_window))
     {
@@ -161,12 +163,12 @@ void Application::Run()
         scene.GetCamera().setSpeeding(toggleSpeed);
 
 
-        m_renderer.Render(scene);
+        m_renderer.Render(scene,effects);
 
 
 
      
-        UI::Render(scene);
+        UI::Render(scene,effects);
       
         glfwSwapBuffers(m_window);
         glfwPollEvents();

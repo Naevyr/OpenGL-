@@ -8,6 +8,9 @@
 #include <string>
 #include "postprocessing/HDRBloom.h"
 #include "postprocessing/Blur.h"
+#include "postprocessing/PostProcessingEffects.h"
+
+
 
 
 class Renderer {
@@ -21,7 +24,7 @@ class Renderer {
 
 
         int m_framebufferColor;
-        int m_framebufferColor2;
+        int m_temporaryBuffer;
         int m_framebufferDepth;
 
         
@@ -58,7 +61,7 @@ class Renderer {
         
 
         void Init(int width, int height);
-        void Render(Scene &scene);
+        void Render(Scene &scene, PostProcessingEffects &effects);
         void SetResolution(int width, int height);
 
         Texture& LoadTexture(std::string file_path);

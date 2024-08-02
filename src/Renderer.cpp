@@ -82,14 +82,14 @@ void Renderer::Init(int width, int height) {
         Texture::CreateTexture(framebufferSpecs2)
     );
 
-    m_framebufferColor2 = m_textures.size() - 1;
+    m_temporaryBuffer = m_textures.size() - 1;
 
     m_quadMaterial = Material("resources/shaders/quad.vert", "resources/shaders/quad.frag");
     glGenVertexArrays(1,&m_quadVAO);
 }
 
 
-void Renderer::Render(Scene& scene) {
+void Renderer::Render(Scene& scene, PostProcessingEffects& effects) {
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_FirstPassFBO);
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_textures[m_framebufferColor].GetTextureID(), 0);
@@ -124,10 +124,15 @@ void Renderer::Render(Scene& scene) {
     skyboxMaterial.SetUniform<glm::mat4>("u_Projection", m_Projection);
     skyboxMaterial.SetUniform<glm::mat4>("u_View", m_View);
     skybox.Draw(skyboxMaterial);
+    if(effects.bloom){
+
+        m_bloom.Run(m_textures[m_framebufferColor], m_textures[m_temporaryBuffer]);
+        glCopyImageSubData( m_textures[m_temporaryBuffer].GetTextureID(), GL_TEXTURE_2D, 0 , 0, 0, 0,
+                m_textures[m_framebufferColor].GetTextureID(), GL_TEXTURE_2D,  0, 0, 0, 0,
+                m_textures[m_framebufferColor].GetWidth() , m_textures[m_framebufferColor].GetHeight(), 1);
+    }
     
-    m_bloom.Run(m_textures[m_framebufferColor], m_textures[m_framebufferColor2]);
-    
-    DrawQuad(m_textures[m_framebufferColor2]);
+    DrawQuad(m_textures[m_framebufferColor]);
 }
 
 

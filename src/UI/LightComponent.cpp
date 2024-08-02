@@ -3,9 +3,9 @@
 
 
 
-void LightComponent::Render(Light& light, bool& close)
+void LightComponent::Render(Light& light, bool* keepOpen)
 {   
-    ImGui::Begin("Light", &close);
+    ImGui::Begin("Light", keepOpen);
 
 
     ImGui::DragFloat3("Light Position", &light.position[0]);
@@ -15,5 +15,5 @@ void LightComponent::Render(Light& light, bool& close)
     
     
     ImGui::End();
-    close = !close;
+    
 }

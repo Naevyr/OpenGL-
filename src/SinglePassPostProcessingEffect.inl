@@ -2,11 +2,12 @@
 #include "Material.h"
 
 
-
+template <>
 inline void SinglePassPostProcessingEffect<ComputeShader>::Initialize(std::string computeShaderPath) {
     m_program = ComputeShader(computeShaderPath);
 }
 
+template <>
 inline void SinglePassPostProcessingEffect<ComputeShader>::Run(Texture& input, Texture& output) {
     m_program.Bind();
     

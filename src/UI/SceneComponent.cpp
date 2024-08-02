@@ -28,17 +28,19 @@ void SceneComponent::Render(Scene& scene) {
         bool expand;
         CollapsedEntityComponent::Render("Light " + i, expand);
 
-        
+
         if(expand)
             m_displayedLights.insert(i);
 
         if(m_displayedLights.count(i) == 0)
             continue;
             
-        bool close;
-        LightComponent::Render(lights[i], close);
-        if(close)
+        bool keepOpen = true;
+        LightComponent::Render(lights[i], &keepOpen);
+        if(!keepOpen)
             m_displayedLights.erase(i);
+
+
     }
 
 
@@ -52,16 +54,16 @@ void SceneComponent::Render(Scene& scene) {
 
         if(m_displayedMeshes.count(i) == 0)
             continue;
-        bool close;
-        MeshComponent::Render(meshes[i], close);
-        if(close)
+        bool keepOpen = true;
+        MeshComponent::Render(meshes[i], &keepOpen);
+        if(!keepOpen)
             m_displayedMeshes.erase(i); 
 
     }
 
 
     ImGui::EndChild();
-
+    
     std::set<int> filteredLights;
 
     for(auto light : m_displayedLights)
@@ -81,15 +83,15 @@ void SceneComponent::Render(Scene& scene) {
             filteredMeshes.insert(mesh);
     };
     m_displayedMeshes = filteredMeshes;
-
-  
     
+
+
 
     ImGui::SeparatorText("Environment");
     ImGui::ColorPicker3("Background", &scene.GetEnvironment().globalIllumination[0]);
     ImGui::DragFloat("Global Illumination Intensity", &scene.GetEnvironment().globalIlluminationIntensity, 0.01f, 0.0f, 1.0f);
 
-
+    
 
     
 }

@@ -5,5 +5,5 @@
 class LightComponent
 {
     public:
-        static void Render(Light& light, bool& close);
+        static void Render(Light& light, bool* keepOpen);
 };

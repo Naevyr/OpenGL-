@@ -5,5 +5,5 @@
 class MeshComponent {
 
     public:
-        static void Render(Mesh& mesh, bool& close);
+        static void Render(Mesh& mesh, bool* keepOpen);
 };
