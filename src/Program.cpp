@@ -1,113 +1,113 @@
 #include "Program.h"
 #include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
+
+void Program::Initialize() {
+
+    m_programID = glCreateProgram();
+
+}
 
 
-unsigned int Program::Create(const char * vertexPath, const char * fragmentPath) {
+Program::~Program(){
+
+    //glDeleteProgram(m_programID);
+}
 
 
-    std::string vertexCode;
-    std::string fragmentCode;
-    std::ifstream vShaderFile;
-    std::ifstream fShaderFile;
 
-    try
+void Program::Bind() {
+    GLint currentProgram = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
+
+    if(currentProgram == m_programID)
+        return;
+
+
+        glUseProgram(m_programID);
+
+
+    for (auto &&texture : m_textureUnits)
     {
-        // open files
-        vShaderFile.open(vertexPath);
-        fShaderFile.open(fragmentPath);
-        std::stringstream vShaderStream, fShaderStream;
-        // read file's buffer contents into streams
-        vShaderStream << vShaderFile.rdbuf();
-        fShaderStream << fShaderFile.rdbuf();
-        // close file handlers
-        vShaderFile.close();
-        fShaderFile.close();
-        // convert stream into string
-        vertexCode = vShaderStream.str();
-        fragmentCode = fShaderStream.str();
+        SetTexture(texture.first, texture.second.unit,texture.second.type, texture.second.textureID);
+    }
     
-    }
-
-    catch (std::ifstream::failure e) {
-
-        std::cout << "Error Shaders not loaded correctly" << std::endl;
-        throw;
-    }
-
-    const char* vShaderCode = vertexCode.c_str();
-    const char* fShaderCode = fragmentCode.c_str();
+}
 
 
-
-    unsigned int vertex, fragment;
-
-    vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vShaderCode, NULL);
-    glCompileShader(vertex);
+void Program::BindBlock(std::string name, unsigned int id) {
+    Bind();
+    glUniformBlockBinding(m_programID, glGetUniformBlockIndex(m_programID, name.c_str()), id);
+}
 
 
-    int success;
-    char log[512];
-
-    glGetShaderiv(vertex, GL_COMPILE_STATUS, &success);
-    if (!success) {
-      
-        glGetShaderInfoLog(vertex, 512, NULL, log);
-        std::cout << log << std::endl;
-    }
-
-    fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, NULL);
-    glCompileShader(fragment);
-
-
-
-    glGetShaderiv(fragment, GL_COMPILE_STATUS, &success);
-    if (!success) {
-      
-
-        glGetShaderInfoLog(vertex, 512, NULL, log);
-          std::cout << log << std::endl;
-    }
-    unsigned int programID = glCreateProgram();
-
-    glAttachShader(programID, vertex);
-    glAttachShader(programID, fragment);
-
-    glLinkProgram(programID);
-    GLint isLinked = 0;
-    glGetProgramiv(programID, GL_LINK_STATUS, &isLinked);
-    if (isLinked == GL_FALSE)
-    {
-        GLint maxLength = 0;
-        glGetProgramiv(programID, GL_INFO_LOG_LENGTH, &maxLength);
-
-        // The maxLength includes the NULL character
-        std::vector<char> infoLog(maxLength);
-        glGetProgramInfoLog(programID, maxLength, &maxLength, &infoLog[0]);
-        for (char i: infoLog)
-            std::cout << i;
-        return 0;
-    }
- 
-
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
-
-    return programID;
+template<>
+void Program::SetUniform(std::string name, glm::mat4 value) {
+    Bind();
+    unsigned int location = glGetUniformLocation(m_programID, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
 
 }
 
 
-void Program::Delete(unsigned int programID){
+template<>
+void Program::SetUniform(std::string name, glm::vec4 value) {
+Bind();
+    unsigned int location = glGetUniformLocation(m_programID, name.c_str());
+    glUniform4fv(location, 1, &value[0]);
 
-    glDeleteProgram(programID);
+}
+template<>
+void Program::SetUniform(std::string name, glm::vec3 value) {
+Bind();
+    unsigned int location = glGetUniformLocation(m_programID, name.c_str());
+    glUniform3fv(location, 1, &value[0]);
+
 }
 
 
+template<>
+void Program::SetUniform(std::string name, glm::vec2 value) {
+Bind();
+    unsigned int location = glGetUniformLocation(m_programID, name.c_str());
+    glUniform2fv(location, 1, &value[0]);
+
+
+}
+
+template<>
+void Program::SetUniform(std::string name, float value) {
+Bind();
+    unsigned int location = glGetUniformLocation(m_programID, name.c_str());
+    glUniform1f(location, value );
+}
+
+template<>
+void Program::SetUniform(std::string name, int value) {
+    Bind();
+    unsigned int location = glGetUniformLocation(m_programID, name.c_str());
+    glUniform1i(location, value );
+}
+
+
+template<>
+void Program::SetUniform(std::string name, Texture& value) {
+
+    
+    Bind();
+    if(m_textureUnits.count(name) == 0)
+        m_textureUnits[name] = TextureBinding(name, m_textureUnits.size(), value.GetTextureID(), value.GetTextureType());
+
+
+
+    SetTexture(name, m_textureUnits[name].unit, m_textureUnits[name].type, value.GetTextureID());
+
+}
+
+void Program::SetTexture(std::string name, unsigned int unit,unsigned int type, unsigned int textureID) {
+    
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(type, textureID);
+
+    unsigned int location = glGetUniformLocation(m_programID, name.c_str());
+    glUniform1i(location,  unit);
+}

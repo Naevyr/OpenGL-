@@ -17,6 +17,8 @@ add_executable(opengl_plus ${LOCAL_SOURCES})
 
 target_include_directories(opengl_plus PRIVATE lib/external)
 target_include_directories(opengl_plus PRIVATE lib/external/glad/include)
+target_include_directories(opengl_plus PRIVATE lib/external/glfw/include)
+
 target_include_directories(opengl_plus PRIVATE lib/external/imgui-lib)
 target_include_directories(opengl_plus PRIVATE lib/external/imgui-lib/imgui)
 target_include_directories(opengl_plus PRIVATE src/)

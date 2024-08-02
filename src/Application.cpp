@@ -122,16 +122,20 @@ void Application::Run()
 
 
     Light light;
-    light.color = glm::vec4(1, 1, 1,0);
+    light.color = glm::vec3(1, 0, 1);
     light.position = glm::vec3(0, 10, 0);
     light.intensity = 1.0f;
-    light.type = LightType::POINT;
+    light.type = LightType::DIRECTIONAL;
     light.direction = glm::normalize(glm::vec3(0.000001, -1, 0));
     scene.AddLight(light);
+    scene.AddLight(light);
+
 
 
     double previousTime = glfwGetTime();
     bool toggleSpeed = false;
+
+    PostProcessingEffects effects;
 
 
     while (!glfwWindowShouldClose(m_window))
@@ -159,12 +163,12 @@ void Application::Run()
         scene.GetCamera().setSpeeding(toggleSpeed);
 
 
-        m_renderer.Render(scene);
+        m_renderer.Render(scene,effects);
 
 
 
      
-        UI::Render(scene);
+        UI::Render(scene,effects);
       
         glfwSwapBuffers(m_window);
         glfwPollEvents();
@@ -206,7 +210,7 @@ void Application::processMovement(double deltaTime, glm::vec3 * direction, glm::
     double xpos, ypos;
     glfwGetCursorPos(m_window, &xpos, &ypos );
     
-    *rotation = glm::vec2((xpos  - m_width / 2),  ypos - m_height/ 2 );
+    *rotation = glm::vec2((xpos   - m_width / 2) * deltaTime * 100,  (ypos  - m_height/ 2 ) * deltaTime * 100);
 
 
     glfwSetCursorPos(m_window, m_width / 2, m_height / 2);

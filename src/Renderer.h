@@ -6,6 +6,12 @@
 #include "MaterialDefinition.h"
 #include <unordered_map>
 #include <string>
+#include "postprocessing/HDRBloom.h"
+#include "postprocessing/Blur.h"
+#include "postprocessing/PostProcessingEffects.h"
+
+
+
 
 class Renderer {
     private: 
@@ -17,6 +23,14 @@ class Renderer {
         std::unordered_map<std::string, unsigned int> m_loadedTextureMap;
 
 
+        int m_framebufferColor;
+        int m_temporaryBuffer;
+        int m_framebufferDepth;
+
+        
+        HDRBloom m_bloom;
+        Blur m_blur;
+
         glm::mat4 m_Projection, m_View;
 
 
@@ -26,20 +40,28 @@ class Renderer {
         unsigned int m_LightBuffer;
 
 
+
+
+        unsigned int m_FirstPassFBO;
+
         
+
+        Material m_quadMaterial;
+        unsigned int m_quadVAO;
 
         void SetTransformUniform(glm::mat4 projection, glm::mat4 view);
         void SetLightUniform(std::vector<Light>& lights, Environment& environment);
         void SetShadowMapUniform(Scene& scene);
 
         void RenderShadowMap(Scene& scene);
+        void DrawQuad(Texture &texture);
     public:
 
         inline Renderer() { };
         
 
         void Init(int width, int height);
-        void Render(Scene &scene);
+        void Render(Scene &scene, PostProcessingEffects &effects);
         void SetResolution(int width, int height);
 
         Texture& LoadTexture(std::string file_path);

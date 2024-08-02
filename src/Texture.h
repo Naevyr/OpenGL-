@@ -1,36 +1,93 @@
 #pragma once
 #include <string>
 #include <array>
+#include <glad/glad.h>
+template <size_t N = 1>
+struct LocalTextureSpecs {
+   
+    std::array<std::string, N> path = {"resources/textures/default-abledo.png"};
+    unsigned int format = GL_RGBA;
+    unsigned int internal_format = GL_RGBA;
+    unsigned int encoding = GL_UNSIGNED_BYTE;
+    unsigned int type = GL_TEXTURE_2D;
+
+    unsigned int mipmap_levels = 1;
+
+};
+
+
+struct RuntimeTextureSpecs {
+    int width = -1;
+    int height = -1;
+    int depth = 1;
+    unsigned int wrapping = GL_CLAMP_TO_EDGE;
+    unsigned int filtering = GL_LINEAR;
+    unsigned int mipmap_levels = 1;
+    
+    unsigned int format = GL_RGBA;
+    unsigned int internal_format = GL_RGBA;
+    unsigned int encoding = GL_FLOAT;
+    unsigned int type = GL_TEXTURE_2D;
+
+};
+
+struct VirtualTextureSpecs {
+    int width = -1;
+    int height = -1;
+    int depth = 1;
+    unsigned int handle = 0;    
+
+    unsigned int format = GL_RGBA;
+    unsigned int internal_format = GL_RGBA;
+    unsigned int encoding = GL_FLOAT;
+    unsigned int type = GL_TEXTURE_2D;
+    
+    unsigned int mipmap_levels = 1;
+};
+
 class Texture {
     private:
         unsigned int m_textureID;
         unsigned int m_textureType;
+        
+        unsigned int m_format;
+        unsigned int m_internalFormat;
 
 
         int m_width;
         int m_height;
-        int m_channels;
 
-
-        bool m_virtualHandle = false;
 
         
     public:
 
         inline Texture() {}
         
-        static Texture LoadTexture(std::string path = "");
-        static Texture LoadTextureArray(std::string file_paths[], int count);
-        static Texture CreateTexture(unsigned int openglHandle, unsigned int type);
-        static Texture CreateTexture(int width, int height, int channels);
-        static Texture AllocateTextureArray(int width, int height, int channels, int count);
-        static Texture LoadCubeMap(std::array<std::string,6> file_paths);
+        template <size_t N = 1>
+
+        static Texture CreateTexture(LocalTextureSpecs<N> specs);
+        static Texture CreateTexture(VirtualTextureSpecs specs);
+        static Texture CreateTexture(RuntimeTextureSpecs specs);
+        
 
 
 
-        void Bind(unsigned int unit) const;
+
+
+        inline void Bind() { glBindTexture(m_textureType, m_textureID); } 
+ 
+        
+        inline unsigned int GetTextureID() const { return m_textureID; }
         inline int GetWidth() const  { return m_width; }
-        inline int GetHeight() const { return m_height; }    
+        inline int GetHeight() const { return m_height; } 
+        inline unsigned int GetFormat() const {return m_format; }   
+        inline unsigned int GetInternalFormat() const {return m_internalFormat; }   
+
+        inline unsigned int GetTextureType() const { return m_textureType; }
+
+
+        
 
 };
 
+#include "Texture.inl"
