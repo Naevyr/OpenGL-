@@ -10,21 +10,30 @@
 
 class Mesh
 {
-    
+    public: 
+        
+        enum Type{
+            STATIC,
+            DYNAMIC
+        };
+
+
+
     private:
 
         VertexArray m_vertexArray;
-        
         unsigned int m_materialIndex;
 
         glm::vec3 m_position = glm::vec3(0, 0, 0);
         glm::vec3 m_scale = glm::vec3(1, 1, 1);
         glm::quat m_orientation = glm::quat(0, 0, 0, 1);
+
+        
         
     public:
 
 
-        Mesh(const char * filename, unsigned int materialIndex);
+        Mesh(VertexArray vertexArray, unsigned int materialIndex);
         
         
         void Draw(Material& material);
@@ -38,12 +47,8 @@ class Mesh
         inline void setOrientation(glm::quat orientation) { m_orientation = orientation; }
 
         inline unsigned int getMaterialIndex() { return m_materialIndex; }
-
-
-        enum Type{
-            STATIC,
-            DYNAMIC
-        };
-
+        
+        
+        static void LoadFromFile(std::string path, Type type, std::vector<unsigned char>& vertices, std::vector<unsigned int>& indices);
         
 };

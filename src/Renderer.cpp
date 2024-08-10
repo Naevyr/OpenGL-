@@ -138,8 +138,8 @@ void Renderer::Render(Scene& scene, PostProcessingEffects& effects) {
 
 void Renderer::SetResolution(int width, int height)
 {
-    m_Width = width;
-    m_Height = height;
+    m_width = width;
+    m_height = height;
     m_Projection = glm::perspective(glm::radians(45.0f), (float) width / height, 0.1f, 1000.0f);
 
 }

@@ -31,7 +31,7 @@ class Renderer {
         glm::mat4 m_Projection, m_View;
 
 
-        int m_Width, m_Height;
+        int m_width, m_height;
 
 
         unsigned int m_mainPassFBO;

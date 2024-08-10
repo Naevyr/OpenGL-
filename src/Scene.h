@@ -10,12 +10,17 @@ class Scene
 {
     private:
         Camera m_Camera;
+
+
+        
         std::vector<Mesh> m_Meshes;
         std::vector<Light> m_Lights;
         Environment m_Environment;
     
     public:
         inline Scene() {}
+
+        
         inline void AddMesh(Mesh mesh) { m_Meshes.push_back(mesh); }
         inline std::vector<Mesh>& GetMeshes() { return m_Meshes; };
         

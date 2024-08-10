@@ -2,19 +2,49 @@
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
-
+#include "VertexArray.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION 
 #include "tiny_obj_loader/tiny_obj_loader.h"
-struct Vertex {
-    glm::vec3 position;
-    glm::vec3 normal;
-    glm::vec2 texcoord;
-};
 
-Mesh::Mesh(const char * filename, unsigned int materialIndex) : m_materialIndex(materialIndex) {
+
+Mesh::Mesh(VertexArray vertexArray, unsigned int materialIndex) 
+    : m_materialIndex(materialIndex),
+        m_vertexArray(vertexArray) 
+{
    
 
+};
+
+
+
+void Mesh::Draw(Material &material){
+
+    
+    m_vertexArray.Bind();
+    material.SetUniform<glm::mat4>(
+        "u_Model",
+        glm::scale(glm::translate(glm::mat4(1), getPosition()) *  glm::mat4_cast(getOrientation()), getScale()) 
+    );
+
+    glDrawElements(GL_TRIANGLES, m_vertexArray.getCount(), GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, m_indexBuffer.getCount());
+
+}
+
+
+template<typename T>
+std::vector<unsigned char> LoadVertices(std::vector<tinyobj::shape_t>& shapes,tinyobj::attrib_t& attrib);
+
+
+template<>
+std::vector<unsigned char> LoadVertices<VertexArray::StaticMeshLayout>(std::vector<tinyobj::shape_t>& shapes,tinyobj::attrib_t& attrib);
+
+
+
+
+void Mesh::LoadFromFile(std::string path, Type type, std::vector<unsigned char>& vertices, std::vector<unsigned int>& indices){
+    
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
@@ -22,7 +52,7 @@ Mesh::Mesh(const char * filename, unsigned int materialIndex) : m_materialIndex(
     std::string warn;
     std::string err;
 
-    bool loadout = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filename);
+    bool loadout = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, path.c_str());
 
 
     if(!loadout) {
@@ -31,10 +61,27 @@ Mesh::Mesh(const char * filename, unsigned int materialIndex) : m_materialIndex(
     }
 
 
+    indices.reserve(shapes[0].mesh.indices.size());
+
+
+    size_t index_offset = 0;
+    for (size_t f = 0; f < shapes[0].mesh.num_face_vertices.size(); f++) {
+        size_t fv = size_t(shapes[0].mesh.num_face_vertices[f]);
+
+        for (size_t v = 0; v < fv; v++) {
+          
+            indices.push_back(index_offset);
+        }
+        index_offset += fv;
+    }
+}
 
 
 
-    std::vector<Vertex> vertices;
+template<>
+std::vector<unsigned char> LoadVertices<VertexArray::StaticMeshLayout>(std::vector<tinyobj::shape_t>& shapes,tinyobj::attrib_t& attrib){
+    
+    std::vector<VertexArray::StaticMeshLayout> vertices;
     std::vector<unsigned int> indices;
     size_t index_offset = 0;
     for (size_t f = 0; f < shapes[0].mesh.num_face_vertices.size(); f++) {
@@ -59,31 +106,20 @@ Mesh::Mesh(const char * filename, unsigned int materialIndex) : m_materialIndex(
 
 
     
-            vertices.push_back(Vertex{
-                glm::vec3(vx, vy, vz),
-                glm::vec3(nx, ny, nz),
-                glm::vec2(tx, ty)
-            });
+            vertices.push_back(
+                VertexArray::StaticMeshLayout{
+                    glm::vec3(vx, vy, vz),
+                    glm::vec3(nx, ny, nz),
+                    glm::vec2(tx, ty)
+                }
+            );
             indices.push_back(index_offset);
         }
         index_offset += fv;
     }
+
+    std::vector<float> floatVec(vertices.size() * sizeof(VertexArray::StaticMeshLayout));
+    std::transform(intVec.begin(), intVec.end(), floatVec.begin(),
+                   [](int val) { return static_cast<float>(val); });
     m_vertexArray = VertexArray((unsigned char*) &vertices[0], vertices.size() * (sizeof(float) * 8));
-    m_indexBuffer = IndexBuffer((unsigned char*) &indices, indices.size());
-};
-
-
-
-void Mesh::Draw(Material &material){
-
-    
-    m_vertexArray.Bind();
-    material.SetUniform<glm::mat4>(
-        "u_Model",
-        glm::scale(glm::translate(glm::mat4(1), getPosition()) *  glm::mat4_cast(getOrientation()), getScale()) 
-    );
-
-    glDrawElements(GL_TRIANGLES, m_vertexArray.getCount(), GL_UNSIGNED_INT, 0);
-    glDrawArrays(GL_TRIANGLES, 0, m_indexBuffer.getCount());
-
 }
