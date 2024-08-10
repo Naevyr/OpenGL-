@@ -7,6 +7,9 @@
 class Texture {
     private:
         unsigned int m_textureID;
+        unsigned int m_textureBindlessHandle;
+
+
         unsigned int m_textureType;
         
         unsigned int m_format;
@@ -19,6 +22,7 @@ class Texture {
 
         
     public:
+        friend class TextureAllocator;
 
         inline Texture() {}
         

@@ -3,7 +3,9 @@
 
 
 
-void ForwardPipeline::Initialize() {
+ForwardPipeline::ForwardPipeline(std::weak_ptr<TextureAllocator> textureAllocator) 
+                : m_textureAllocator(textureAllocator)
+{
     glGenFramebuffers(1, &m_ShadowFB);
     glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowFB);
     glEnable(GL_DEPTH_TEST);
@@ -30,7 +32,7 @@ void ForwardPipeline::Initialize() {
     shadowMapSpecs.encoding = GL_FLOAT;
     shadowMapSpecs.type = GL_TEXTURE_2D_ARRAY;
     shadowMapSpecs.depth = 20;
-    m_shadowMap = Texture::CreateTexture(shadowMapSpecs); 
+    m_shadowMap = m_textureAllocator->CreateTexture(shadowMapSpecs); 
 
     
 
@@ -40,10 +42,10 @@ void ForwardPipeline::Initialize() {
 }
 
 
-void ForwardPipeline::Render(Scene& scene, RenderSpecifications& specs) {
+void ForwardPipeline::Render(RenderSpecifications& specs) {
 
 
-    RenderShadowMap(scene);
+    RenderShadowMap(specs.scene);
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_ColorFB);
 
@@ -55,10 +57,10 @@ void ForwardPipeline::Render(Scene& scene, RenderSpecifications& specs) {
     glViewport(0, 0, specs.colorTexture.GetWidth(), specs.colorTexture.GetHeight());
     
     SetTransformUniform(specs.projection, specs.view);
-    SetLightUniform(scene.GetLights(), scene.GetEnvironment());
+    SetLightUniform(specs.scene.GetLights(), specs.scene.GetEnvironment());
 
 
-    for(auto mesh : scene.GetMeshes())
+    for(auto mesh : specs.scene.GetMeshes())
 
     {
         auto material = m_materials[mesh.getMaterialIndex()];
@@ -120,7 +122,7 @@ void ForwardPipeline::SetLightUniform(std::vector<Light>& lights, Environment& e
 
 
 }
-
+/*
 
 unsigned int ForwardPipeline::LoadMaterial(MaterialDescription materialDefinition, std::unordered_map<std::string, unsigned int>& local_textures, std::vector<Texture>& global_textures) {
 
@@ -172,6 +174,7 @@ unsigned int ForwardPipeline::LoadMaterial(MaterialDescription materialDefinitio
     return m_materials.size() - 1;
 }
 
+*/
 
 void ForwardPipeline::RenderShadowMap(Scene& scene) {
  

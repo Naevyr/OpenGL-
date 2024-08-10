@@ -83,6 +83,7 @@ void Mesh::Draw(Material &material){
         glm::scale(glm::translate(glm::mat4(1), getPosition()) *  glm::mat4_cast(getOrientation()), getScale()) 
     );
 
+    glDrawElements(GL_TRIANGLES, m_vertexArray.getCount(), GL_UNSIGNED_INT, 0);
     glDrawArrays(GL_TRIANGLES, 0, m_indexBuffer.getCount());
 
 }

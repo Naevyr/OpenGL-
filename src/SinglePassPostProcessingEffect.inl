@@ -3,7 +3,7 @@
 
 
 template <>
-inline void SinglePassPostProcessingEffect<ComputeShader>::Initialize(std::string computeShaderPath) {
+inline SinglePassPostProcessingEffect<ComputeShader>::SinglePassPostProcessingEffect(std::string computeShaderPath) {
     m_program = ComputeShader(computeShaderPath);
 }
 

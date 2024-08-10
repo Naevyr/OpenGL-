@@ -2,16 +2,11 @@
 #include <glad/glad.h>
 #include <cstdint>
 
-VertexArray::VertexArray(unsigned char * data, unsigned int count) {
+VertexArray::VertexArray(std::vector<unsigned char> vertices, std::vector<unsigned int> indices, std::shared_ptr<VertexBuffer> vertexBuffer) : m_vertexBuffer(vertexBuffer) {
 
-    glGenVertexArrays(1, &m_arrayID);
-    glBindVertexArray(m_arrayID);
-
+    m_indexBuffer = IndexBuffer(indices);
     
-    m_vertexBuffer = VertexBuffer(data, count);
-    m_vertexBuffer.bind();
-
-
+    
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
     glEnableVertexAttribArray(1);
@@ -27,6 +22,6 @@ void VertexArray::Release()
 
 void VertexArray::Bind() const
 {
-    m_vertexBuffer.bind();
+
     glBindVertexArray(m_arrayID);
 }

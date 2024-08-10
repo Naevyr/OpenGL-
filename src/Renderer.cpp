@@ -12,7 +12,7 @@
 
 #include <array>
 
-void Renderer::Init(int width, int height) {
+Renderer::Renderer(int width, int height) {
     
     SetResolution(width, height);
 
@@ -29,9 +29,7 @@ void Renderer::Init(int width, int height) {
 
 
 
-    m_pipeline = ForwardPipeline();
-
-    m_pipeline.Initialize();
+    m_pipeline = ForwardPipeline(m_textureAllocator);
 
 
     m_textures.reserve(10);
@@ -68,7 +66,7 @@ void Renderer::Init(int width, int height) {
     );
     m_framebufferDepth = m_textures.size() - 1;
 
-    glGenFramebuffers(1, &m_FirstPassFBO);
+    glGenFramebuffers(1, &m_mainPassFBO);
 
 
     RuntimeTextureSpecs framebufferSpecs2;
@@ -91,7 +89,7 @@ void Renderer::Init(int width, int height) {
 
 void Renderer::Render(Scene& scene, PostProcessingEffects& effects) {
 
-    glBindFramebuffer(GL_FRAMEBUFFER, m_FirstPassFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_mainPassFBO);
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_textures[m_framebufferColor].GetTextureID(), 0);
     glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_textures[m_framebufferDepth].GetTextureID(), 0);
 
@@ -110,7 +108,7 @@ void Renderer::Render(Scene& scene, PostProcessingEffects& effects) {
     m_pipeline.Render(scene,specs);
 
 
-    glBindFramebuffer(GL_FRAMEBUFFER, m_FirstPassFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_mainPassFBO);
     glBindTexture(GL_TEXTURE_2D, m_textures[m_framebufferColor].GetTextureID());
     glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_textures[m_framebufferColor].GetTextureID(), 0);
     glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_textures[m_framebufferDepth].GetTextureID(), 0);

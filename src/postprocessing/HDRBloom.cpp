@@ -3,9 +3,11 @@
 
 
 
-void HDRBloom::Initialize()  {
+HDRBloom::HDRBloom(): {
 
-    m_brightPass.Initialize("resources/shaders/bloom/brightPass.glsl");
+    
+
+    m_brightPass = SinglePassPostProcessingEffect<ComputeShader>("resources/shaders/bloom/brightPass.glsl");
     m_blur = ComputeShader("resources/shaders/compute/blur.glsl");
     m_downSample = ComputeShader("resources/shaders/compute/downsample.glsl");
     m_upSample = ComputeShader("resources/shaders/bloom/upSamplePass.glsl");

@@ -5,8 +5,9 @@
 
 #include "Texture.h"
 
-
-typedef unsigned int TextureHandle;
+struct TextureHandle {
+    unsigned int handle = 0;
+};
 
 
 
@@ -58,20 +59,13 @@ class TextureAllocator {
 
     private:
         friend class Texture;
-
-
         std::unordered_map<TextureHandle,Texture> m_textures;
-    
     public:
 
-
         template <size_t N = 1>
-        static TextureHandle CreateTexture(LocalTextureSpecs<N> specs);
-        static TextureHandle CreateTexture(VirtualTextureSpecs specs);
-        static TextureHandle CreateTexture(RuntimeTextureSpecs specs);
-        
-
-
+        TextureHandle CreateTexture(LocalTextureSpecs<N> specs);
+        TextureHandle CreateTexture(VirtualTextureSpecs specs);
+        TextureHandle CreateTexture(RuntimeTextureSpecs specs);
 
 };
 

@@ -10,6 +10,7 @@ class VertexBuffer {
         VertexBuffer(void * data, unsigned int size); 
 
 
-        void bind() const;
-        void update(float* data, int size);
+        void Bind() const;
+        
+        void Update(float* data, int size);
 };

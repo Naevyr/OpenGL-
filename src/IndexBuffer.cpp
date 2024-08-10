@@ -1,15 +1,12 @@
 #include "IndexBuffer.h"
 #include <glad/glad.h>
 
-IndexBuffer::IndexBuffer(void * data, unsigned int count) : m_count(count){
+IndexBuffer::IndexBuffer(std::vector<unsigned char> data) : m_count(data.size() / sizeof(unsigned int)) {
 
     glGenBuffers(1, &m_glID);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_glID);
 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, data.size() * sizeof(unsigned int), data.data(), GL_STATIC_DRAW);
     
 } 
 
-void IndexBuffer::Release(){
-    glDeleteBuffers(1, &m_glID);
-}

@@ -38,6 +38,13 @@ TextureHandle TextureAllocator::CreateTexture(RuntimeTextureSpecs specs) {
 
     if(specs.mipmap_levels > 1)
         glGenerateMipmap(specs.type);
+
+    GLuint64 textureHandle = glGetTextureHandleARB(texture.m_textureID);
+    glMakeTextureHandleResidentARB(textureHandle);
+    texture.m_textureBindlessHandle = textureHandle;
+
+
+
     return texture;
 }
 

@@ -13,9 +13,8 @@ class Mesh
     
     private:
 
-    
-        IndexBuffer m_indexBuffer;
-
+        VertexArray m_vertexArray;
+        
         unsigned int m_materialIndex;
 
         glm::vec3 m_position = glm::vec3(0, 0, 0);

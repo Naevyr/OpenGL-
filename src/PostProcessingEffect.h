@@ -4,9 +4,10 @@
 
 class PostProcessingEffect {
 
-   
+    protected:
+        PostProcessingEffect();
+
     public:
-        virtual void Initialize() = 0;
         virtual void Run(Texture& input, Texture& output) = 0;
 
 };

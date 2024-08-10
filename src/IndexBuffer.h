@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 
 class IndexBuffer {
     private:
@@ -7,11 +9,8 @@ class IndexBuffer {
         unsigned int m_count;  
     public:
         inline IndexBuffer() {}
-        IndexBuffer(void * data, unsigned int count);
-        void Release();
-        
-
-        void bind();
+        IndexBuffer(std::vector<unsigned char> data);
+        void Bind();
         inline unsigned int getCount() const { return m_count; }
 
 };

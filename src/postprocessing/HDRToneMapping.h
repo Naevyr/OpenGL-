@@ -9,10 +9,8 @@ class HDRToneMapping :  public SinglePassPostProcessingEffect<Material> {
 
     public: 
 
-    
-        void Initialize(std::string shaderPath) override;
-        void Run(Texture& input, Texture& output) override;
-
         HDRToneMapping() {}
+        HDRToneMapping(std::string shaderPath);
 
+        void Run(Texture& input, Texture& output) override;
 };
