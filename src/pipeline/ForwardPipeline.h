@@ -2,7 +2,7 @@
 #include "Pipeline.h"
 #include "Material.h"
 #include "Light.h"
-#include "Environment.h"
+#include "scene/EnvironmentDescription.h"
 #include "TextureAllocator.h"
 
 #include <vector>
@@ -26,10 +26,10 @@ class ForwardPipeline : public Pipeline{
 
         std::vector<Material> m_materials;
         
-        std::weak_ptr<TextureAllocator> m_textureAllocator;
+        std::shared_ptr<TextureAllocator> m_textureAllocator;
 
         
-        void SetLightUniform(std::vector<Light>& lights, Environment& environment);
+        void SetLightUniform(std::vector<Light>& lights, EnvironmentDescription& environment);
         void SetTransformUniform(glm::mat4 projection, glm::mat4 view);
         void RenderShadowMap(Scene& scene);
       
@@ -39,7 +39,7 @@ class ForwardPipeline : public Pipeline{
 
         inline ForwardPipeline() { }
         
-        ForwardPipeline(std::weak_ptr<TextureAllocator> textureAllocator);
+        ForwardPipeline(std::shared_ptr<TextureAllocator> textureAllocator);
 
         void Render(RenderSpecifications& specs) override; 
         

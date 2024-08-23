@@ -43,12 +43,12 @@ TextureHandle TextureAllocator::CreateTexture(RuntimeTextureSpecs specs) {
     glMakeTextureHandleResidentARB(textureHandle);
     texture.m_textureBindlessHandle = textureHandle;
 
-
-
-    return texture;
+    m_nextHandle++;
+    m_textures [m_nextHandle] = texture;
+    return m_nextHandle;
 }
 
-Texture TextureAllocator::CreateTexture(VirtualTextureSpecs specs) {
+TextureHandle TextureAllocator::CreateTexture(VirtualTextureSpecs specs) {
 
     Texture texture;
 
@@ -61,5 +61,9 @@ Texture TextureAllocator::CreateTexture(VirtualTextureSpecs specs) {
 
     texture.m_format = specs.internal_format;
 
-    return texture;
+    TextureHandle handle = m_textures.size();
+    
+    m_nextHandle++;
+    m_textures [m_nextHandle] = texture;
+    return m_nextHandle;
 }

@@ -1,5 +1,8 @@
-cmake_minimum_required(VERSION 3.0.0)
+set(CMAKE_CXX_STANDARD 20)
+cmake_minimum_required(VERSION 3.5)
 project(opengl_plus VERSION 0.1.0 LANGUAGES CXX)
+
+
 #set(CMAKE_GENERATOR_PLATFORM x64)
 include(CTest)
 enable_testing()
@@ -32,6 +35,8 @@ target_link_libraries(opengl_plus glad)
 target_link_libraries(opengl_plus glm)
 target_link_libraries(opengl_plus OpenGL::GL)
 target_link_libraries(opengl_plus imgui)
+target_link_libraries(opengl_plus tinygltf)
+
 
 
 

@@ -19,7 +19,7 @@ class Program {
 
     protected:
         unsigned int m_programID;
-        void SetTexture(std::string name, unsigned int unit, unsigned int type, unsigned int textureID);
+
     public:
         ~Program();
 

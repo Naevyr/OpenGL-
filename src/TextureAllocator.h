@@ -1,14 +1,10 @@
 #pragma once
 #include <glad/glad.h>
-#include <unordered_map>
-
-
+#include <map>
 #include "Texture.h"
 
-struct TextureHandle {
-    unsigned int handle = 0;
-};
 
+typedef unsigned int TextureHandle;
 
 
 template <size_t N = 1>
@@ -59,7 +55,8 @@ class TextureAllocator {
 
     private:
         friend class Texture;
-        std::unordered_map<TextureHandle,Texture> m_textures;
+        std::map<TextureHandle,Texture> m_textures;
+        TextureHandle m_nextHandle;
     public:
 
         template <size_t N = 1>

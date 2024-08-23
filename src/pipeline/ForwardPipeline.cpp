@@ -3,7 +3,7 @@
 
 
 
-ForwardPipeline::ForwardPipeline(std::weak_ptr<TextureAllocator> textureAllocator) 
+ForwardPipeline::ForwardPipeline(std::shared_ptr<TextureAllocator> textureAllocator) 
                 : m_textureAllocator(textureAllocator)
 {
     glGenFramebuffers(1, &m_ShadowFB);
@@ -57,16 +57,18 @@ void ForwardPipeline::Render(RenderSpecifications& specs) {
     glViewport(0, 0, specs.colorTexture.GetWidth(), specs.colorTexture.GetHeight());
     
     SetTransformUniform(specs.projection, specs.view);
-    SetLightUniform(specs.scene.GetLights(), specs.scene.GetEnvironment());
+    //SetLightUniform(specs.scene.GetLights(), specs.scene.GetEnvironment());
 
 
-    for(auto mesh : specs.scene.GetMeshes())
-
+    PrimitiveGroup primitiveGroup = specs.scene.GetPrimitiveGroup();
+    
+    while (primitiveGroup.next_pass.has_value())
     {
-        auto material = m_materials[mesh.getMaterialIndex()];
-        material.Bind();
-        mesh.Draw(material);
-    }   
+        for(auto&& primitive : primitiveGroup.primitives)
+        {
+
+        }
+    }
 }
 
 

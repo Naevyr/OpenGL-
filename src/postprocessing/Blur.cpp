@@ -1,5 +1,5 @@
 #include "Blur.h"
-void Blur::Blur(int blurSize) {
+Blur::Blur(int blurSize) {
     m_blurSize = blurSize;
     SinglePassPostProcessingEffect<ComputeShader>::SinglePassPostProcessingEffect<ComputeShader>("resources/shaders/compute/blur.glsl");
 }

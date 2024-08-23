@@ -1,7 +1,7 @@
 
 #include "Renderer.h"
 
-#include "Environment.h"
+#include "scene/EnvironmentDescription.h"
 #include "pipeline/Pipeline.h"
 
 #define GLM_ENABLE_EXPERIMENTAL

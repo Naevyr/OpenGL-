@@ -4,6 +4,8 @@
 #include "scene/MeshDescription.h"
 #include "scene/EnvironmentDescription.h"
 
+#include <vector>
+
 
 struct SceneDescription
 {       

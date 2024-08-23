@@ -10,20 +10,18 @@
 // #define TINYGLTF_NOEXCEPTION // optional. disable exception handling.
 #include "tinygltf/tiny_gltf.h"
 
-using namespace tinygltf;
 
 
-Scene Scene::LoadFromFile(std::string path)
+Scene Scene::Load(SceneDescription scene)
 {
 
-    Model model;
-    TinyGLTF loader;
+    tinygltf::Model model;
+    tinygltf::TinyGLTF loader;
     std::string err;
     std::string warn;
 
-    bool ret = loader.LoadASCIIFromFile(&model, &err, &warn, argv[1]);
-    //bool ret = loader.LoadBinaryFromFile(&model, &err, &warn, argv[1]); // for binary glTF(.glb)
-
+    bool ret = loader.LoadASCIIFromFile(&model, &err, &warn, scene.gltf_path.c_str());
+    
     if (!warn.empty()) {
       printf("Warn: %s\n", warn.c_str());
     }
@@ -34,6 +32,13 @@ Scene Scene::LoadFromFile(std::string path)
 
     if (!ret) {
       printf("Failed to parse glTF\n");
-      return -1;
-    }
+    }   
+
+    
+    
+    
+
+
+
+    
 }

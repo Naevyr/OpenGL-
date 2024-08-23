@@ -2,14 +2,17 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <vector>
+#include <memory>
+#include <optional>
+
 
 class Node {
     
     private:
         
-        std::vector<std::unique_ptr<Node>> m_children;
-        std::optional<std::unique_ptr<Node>> m_parent;
-
+        std::vector<std::shared_ptr<Node>> m_children;
+        std::optional<std::shared_ptr<Node>> m_parent;
+    
 
     protected:
         glm::vec3 m_position;

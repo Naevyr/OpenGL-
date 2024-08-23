@@ -30,6 +30,8 @@ class Texture {
 
 
         inline unsigned int GetTextureID() const { return m_textureID; }
+        inline unsigned int GetTextureHandle() const { return m_textureBindlessHandle; }
+
         inline int GetWidth() const  { return m_width; }
         inline int GetHeight() const { return m_height; } 
         inline unsigned int GetFormat() const {return m_format; }   

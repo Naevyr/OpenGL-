@@ -24,13 +24,6 @@ void Program::Bind() {
 
 
         glUseProgram(m_programID);
-
-
-    for (auto &&texture : m_textureUnits)
-    {
-        SetTexture(texture.first, texture.second.unit,texture.second.type, texture.second.textureID);
-    }
-    
 }
 
 
@@ -76,7 +69,7 @@ Bind();
 
 template<>
 void Program::SetUniform(std::string name, float value) {
-Bind();
+    Bind();
     unsigned int location = glGetUniformLocation(m_programID, name.c_str());
     glUniform1f(location, value );
 }
@@ -91,23 +84,8 @@ void Program::SetUniform(std::string name, int value) {
 
 template<>
 void Program::SetUniform(std::string name, Texture& value) {
-
-    
     Bind();
-    if(m_textureUnits.count(name) == 0)
-        m_textureUnits[name] = TextureBinding(name, m_textureUnits.size(), value.GetTextureID(), value.GetTextureType());
-
-
-
-    SetTexture(name, m_textureUnits[name].unit, m_textureUnits[name].type, value.GetTextureID());
-
-}
-
-void Program::SetTexture(std::string name, unsigned int unit,unsigned int type, unsigned int textureID) {
-    
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(type, textureID);
-
     unsigned int location = glGetUniformLocation(m_programID, name.c_str());
-    glUniform1i(location,  unit);
+    glUniformHandleui64ARB(location,value.GetTextureID());
 }
+

@@ -2,37 +2,46 @@
 
 #include <glm/glm.hpp>
 #include <vector>
+#include <span>
+
+
 #include "Camera.h"
 #include "Mesh.h"
 #include "Light.h"
-#include "Environment.h"
+#include "Node.h"
+#include "scene/SceneDescription.h"
+#include "scene/EnvironmentDescription.h"
+
+struct PrimitiveGroup {
+    std::span<Primitive&> primitives;
+    std::optional<PrimitiveGroup> next_pass;
+};
+
+
+
+
 class Scene 
 {
     private:
-        Camera m_Camera;
 
-        
-        
-        std::vector<Mesh> m_Meshes;
-        std::vector<Light> m_Lights;
-        Environment m_Environment;
-    
+        std::vector<Primitive&> m_primitives;
+        Camera m_Camera;
+        EnvironmentDescription m_Environment;
+        Node m_rootNode;
+
+
     public:
         inline Scene() {}
 
-        
-        inline void AddMesh(Mesh mesh) { m_Meshes.push_back(mesh); }
-        inline std::vector<Mesh>& GetMeshes() { return m_Meshes; };
-        
-        inline void AddLight(Light light) { m_Lights.push_back(light); }
-        inline std::vector<Light>& GetLights() { return m_Lights; }
-        inline void SetEnvironment(Environment environment) { m_Environment = environment; }
-        inline Environment& GetEnvironment() { return m_Environment; }
 
-        
+
+        inline void SetEnvironment(EnvironmentDescription environment) { m_Environment = environment; }
+        inline EnvironmentDescription& GetEnvironment() { return m_Environment; }
+
+        PrimitiveGroup GetPrimitiveGroup();
 
         inline Camera& GetCamera() { return m_Camera; }
 
-        static Scene LoadFromFile(std::string path);
+        static Scene Load(SceneDescription description);
 
 };  

@@ -1,11 +1,14 @@
 #pragma once
 
+#include <memory>
+#include <glm/gtc/quaternion.hpp>
+
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Material.h"
 #include "Node.h"
-#include <memory>
-#include <glm/gtc/quaternion.hpp>
+#include "Primitive.h"
+
 
 
 class Mesh : public Node
@@ -20,7 +23,7 @@ class Mesh : public Node
     private:
 
         Type m_meshType;
-
+        std::vector<Primitive> m_primitives;
     public:
 
         inline Type getMeshType() { return m_meshType; }

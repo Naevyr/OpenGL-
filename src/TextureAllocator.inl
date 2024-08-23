@@ -24,7 +24,7 @@ TextureHandle TextureAllocator::CreateTexture(LocalTextureSpecs<N> specs)
     runtime_spec.depth = specs.type == GL_TEXTURE_CUBE_MAP ? 1 : N;
 
 
-    Texture texture = Texture::CreateTexture(runtime_spec);
+    Texture texture = TextureAllocator::CreateTexture(runtime_spec);
 
     texture.Bind();
 
@@ -52,9 +52,9 @@ TextureHandle TextureAllocator::CreateTexture(LocalTextureSpecs<N> specs)
 
 
 
-
-
+    m_nextHandle++;
+    m_textures[m_nextHandle] = texture;
     
 
-    return texture;
+    return m_nextHandle;
 }
