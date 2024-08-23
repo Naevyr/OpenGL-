@@ -7,3 +7,6 @@
 [submodule "lib/external/imgui-lib/imgui"]
 	path = lib/external/imgui-lib/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "lib/external/tinygltf"]
+	path = lib/external/tinygltf
+	url = https://github.com/syoyo/tinygltf.git

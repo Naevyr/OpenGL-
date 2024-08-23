@@ -8,37 +8,15 @@
 #include "tiny_obj_loader/tiny_obj_loader.h"
 
 
-Mesh::Mesh(VertexArray vertexArray, unsigned int materialIndex) 
-    : m_materialIndex(materialIndex),
-        m_vertexArray(vertexArray) 
-{
-   
 
-};
-
-
-
-void Mesh::Draw(Material &material){
-
-    
-    m_vertexArray.Bind();
-    material.SetUniform<glm::mat4>(
-        "u_Model",
-        glm::scale(glm::translate(glm::mat4(1), getPosition()) *  glm::mat4_cast(getOrientation()), getScale()) 
-    );
-
-    glDrawElements(GL_TRIANGLES, m_vertexArray.getCount(), GL_UNSIGNED_INT, 0);
-    glDrawArrays(GL_TRIANGLES, 0, m_indexBuffer.getCount());
-
-}
 
 
 template<typename T>
-std::vector<unsigned char> LoadVertices(std::vector<tinyobj::shape_t>& shapes,tinyobj::attrib_t& attrib);
+void LoadVertices(std::vector<tinyobj::shape_t>& shapes,tinyobj::attrib_t& attrib,std::vector<unsigned char>& vertices);
 
 
 template<>
-std::vector<unsigned char> LoadVertices<VertexArray::StaticMeshLayout>(std::vector<tinyobj::shape_t>& shapes,tinyobj::attrib_t& attrib);
+void LoadVertices<VertexArray::StaticMeshLayout>(std::vector<tinyobj::shape_t>& shapes,tinyobj::attrib_t& attrib, std::vector<unsigned char>& vertices);
 
 
 
@@ -79,9 +57,9 @@ void Mesh::LoadFromFile(std::string path, Type type, std::vector<unsigned char>&
 
 
 template<>
-std::vector<unsigned char> LoadVertices<VertexArray::StaticMeshLayout>(std::vector<tinyobj::shape_t>& shapes,tinyobj::attrib_t& attrib){
+void LoadVertices<VertexArray::StaticMeshLayout>(std::vector<tinyobj::shape_t>& shapes,tinyobj::attrib_t& attrib, std::vector<unsigned char>& vertices){
     
-    std::vector<VertexArray::StaticMeshLayout> vertices;
+
     std::vector<unsigned int> indices;
     size_t index_offset = 0;
     for (size_t f = 0; f < shapes[0].mesh.num_face_vertices.size(); f++) {
@@ -103,23 +81,18 @@ std::vector<unsigned char> LoadVertices<VertexArray::StaticMeshLayout>(std::vect
 
             tinyobj::real_t tx = attrib.texcoords[2*size_t(idx.texcoord_index)+0];
             tinyobj::real_t ty = attrib.texcoords[2*size_t(idx.texcoord_index)+1];
-
-
-    
-            vertices.push_back(
-                VertexArray::StaticMeshLayout{
+            auto vertex = VertexArray::StaticMeshLayout{
                     glm::vec3(vx, vy, vz),
                     glm::vec3(nx, ny, nz),
                     glm::vec2(tx, ty)
-                }
-            );
-            indices.push_back(index_offset);
-        }
-        index_offset += fv;
-    }
+                };
+            unsigned char byteArray[sizeof(VertexArray::StaticMeshLayout)];
+    
+            std::memcpy(byteArray, &vertex, sizeof(VertexArray::StaticMeshLayout));
 
-    std::vector<float> floatVec(vertices.size() * sizeof(VertexArray::StaticMeshLayout));
-    std::transform(intVec.begin(), intVec.end(), floatVec.begin(),
-                   [](int val) { return static_cast<float>(val); });
-    m_vertexArray = VertexArray((unsigned char*) &vertices[0], vertices.size() * (sizeof(float) * 8));
+           
+            std::copy(byteArray, byteArray + sizeof(VertexArray::StaticMeshLayout), std::back_inserter(vertices));
+          
+        }
+    }
 }

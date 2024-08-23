@@ -1,18 +1,12 @@
 #pragma once
 #include <string>
 #include "MaterialDescription.h"
+#include <optional>
 
 
-
-struct MeshDescription {
-    enum Type {
-        STATIC,
-        DYNAMIC
-    };
-
-
+struct StaticMeshDescription {
 
     std::string filePath;
-    MaterialDescription material;
+    std::optional<MaterialDescription> material;
 
 };

@@ -11,7 +11,7 @@ class Scene
     private:
         Camera m_Camera;
 
-
+        
         
         std::vector<Mesh> m_Meshes;
         std::vector<Light> m_Lights;
@@ -32,4 +32,7 @@ class Scene
         
 
         inline Camera& GetCamera() { return m_Camera; }
+
+        static Scene LoadFromFile(std::string path);
+
 };  

@@ -20,7 +20,7 @@ void Camera::rotationInput(glm::vec2 rotation, float delta) {
     m_pitch += rotation.y * delta * 100.0f;
     m_yaw += rotation.x * delta * 100.0f;
 
-  
+    
 }
 
 glm::mat4 Camera::getOrientation() const {
