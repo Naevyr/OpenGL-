@@ -30,12 +30,12 @@ class VertexBuffer {
         void Bind() const;
         
         
-        unsigned int AddMesh(std::vector<unsigned char>& data);
-        void RemoveMesh(unsigned int m_meshID);
+        unsigned int addMesh(std::vector<unsigned char>& data);
+        void removeMesh(unsigned int m_meshID);
 
 
-        void SetUsage(bool staticBuffer);
-        inline bool IsStatic() const {return m_isStatic;}
+        void setUsage(bool staticBuffer);
+        inline bool isStatic() const {return m_isStatic;}
 
         ~VertexBuffer();
       

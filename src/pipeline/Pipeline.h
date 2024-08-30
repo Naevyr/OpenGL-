@@ -1,20 +1,35 @@
 #pragma once
 
-#include "Texture.h"
+
+#include "Renderer.h"
 #include "Scene.h"
-
-
+#include "TextureAllocator.h"
 #include <glm/glm.hpp>
-#include <unordered_map>
-#include <vector>
 
-
-struct RenderSpecifications;
 class Pipeline {
-  
+
     public:
-        virtual void Render(RenderSpecifications& specs) = 0;
+
         
+        struct RenderSpecifications;
+
+
+    protected:
+
+        Pipeline();
+        unsigned int m_ShadowFB;
+        TextureHandle m_shadowMap;
+
+        
+
+        unsigned int m_nextMaterialHandle = 0;
+
+    public:
+        virtual void render(RenderSpecifications& specs) = 0;
+        virtual void setup(Renderer::RenderFeatures features);
+
+        virtual MaterialHandle registerMaterial(MaterialDescription& description);
+
 
         //Every pipeline should their own implementation of a material
         //virtual unsigned int LoadMaterial(MaterialDescrip materialDefs, std::unordered_map<std::string, unsigned int>& local_textures,  std::vector<Texture>& global_textures) = 0;
@@ -23,7 +38,7 @@ class Pipeline {
 
 
 
-struct RenderSpecifications {
+struct Pipeline::RenderSpecifications {
 
     Scene& scene;
 

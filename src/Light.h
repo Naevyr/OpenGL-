@@ -1,22 +1,26 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "Node.h"
 
 
-
-enum LightType
-{
-    POINT = 0,
-    DIRECTIONAL = 1,
-    SPOT = 2
-};
 
 
 class Light : public Node
 {
+
+    public:
+        enum Type
+        {
+            POINT = 0,
+            DIRECTIONAL = 1,
+            SPOT = 2
+        };
+        struct Uniform;
+
     private: 
         glm::vec3 m_color;
         float m_intensity;
-        LightType m_type;
+        Type m_type;
     public:
         Light();
         
@@ -24,14 +28,14 @@ class Light : public Node
         glm::vec3 getColor();
         void setIntensity(float intensity);
         float getIntensity();
-        void setType(LightType type);
-        LightType getType();
+        void setType(Type type);
+        Type getType();
 
-        LightUniform getUniformStruct();
+        Light::Uniform getUniformStruct();
 };
 
 
-struct LightUniform {
+struct Light::Uniform {
     glm::mat4 lightSpaceMatrix;
     glm::vec3 position;
     float _padding1;
@@ -40,7 +44,7 @@ struct LightUniform {
     glm::vec3 direction;
     float intensity;
 
-    LightType type;
+    Light::Type type;
 
     int _padding3[3];
 

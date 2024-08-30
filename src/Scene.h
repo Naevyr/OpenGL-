@@ -47,7 +47,7 @@ class Scene
 
         PrimitiveGroup getPrimitiveGroup();
 
-        inline Camera& getCamera() { return std::dynamic_cast<Camera&>(&m_nodes[m_Camera]); } 
+        inline Camera& getCamera() { return (Camera&)m_nodes[m_Camera]; } 
 
         static Scene Load(SceneDescription description);
 

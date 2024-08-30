@@ -3,10 +3,8 @@
 #include <stb/stb_image.h>
 
 class Texture;
-
-
-template <size_t N>
-TextureHandle TextureAllocator::createTexture(LocalTextureSpecs<N> specs)
+struct Texture::LocalTextureSpecification;
+TextureHandle TextureAllocator::createTexture(TextureSpecification specs)
 {
 
 

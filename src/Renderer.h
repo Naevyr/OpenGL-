@@ -3,16 +3,18 @@
 #include "Scene.h"
 #include "Material.h"
 #include "pipeline/ForwardPipeline.h"
-#include <unordered_map>
-#include <string>
+
 #include "postprocessing/HDRBloom.h"
-#include "postprocessing/Blur.h"
-#include "postprocessing/PostProcessingEffects.h"
+
 #include "scene/SceneDescription.h"
 
 
-
 class Renderer {
+
+    public:
+        enum class RenderFeatures;
+
+
     private: 
         
         ForwardPipeline m_pipeline;
@@ -61,4 +63,11 @@ class Renderer {
         void Render();
 
         static void DrawQuad(Texture &texture);
+};
+
+
+enum class Renderer::RenderFeatures {
+    RENDER_FEATURE_LIGHTING = 1 << 0,
+    RENDER_FEATURE_SHADOWS = 1 << 1,
+    RENDER_FEATURE_SKYBOX = 1 << 2,
 };

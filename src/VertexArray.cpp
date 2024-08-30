@@ -8,7 +8,7 @@
 VertexArray::VertexArray(Specifications specs) : m_vertexBuffer(specs.vertexBuffer) {
 
     m_indexBuffer = IndexBuffer(specs.indices);
-    m_meshID = m_vertexBuffer->AddMesh(specs.vertices);
+    m_meshID = m_vertexBuffer->addMesh(specs.vertices);
 
 
     switch (specs.type)
@@ -23,7 +23,7 @@ void VertexArray::Release()
 {
 
     glDeleteVertexArrays(1, &m_arrayID);
-    m_vertexBuffer->RemoveMesh(m_meshID);
+    m_vertexBuffer->removeMesh(m_meshID);
     
 }
 

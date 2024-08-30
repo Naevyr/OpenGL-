@@ -5,7 +5,10 @@
 #include "scene/EnvironmentDescription.h"
 #include "TextureAllocator.h"
 
+#include <memory>
 #include <vector>
+
+
 class ForwardPipeline : public Pipeline{
 
 
@@ -13,7 +16,7 @@ class ForwardPipeline : public Pipeline{
 
         
 
-        unsigned int m_ShadowFB;
+   
         unsigned int m_ColorFB;
         unsigned int m_LightUBO;
         
@@ -26,23 +29,24 @@ class ForwardPipeline : public Pipeline{
 
         std::vector<Material> m_materials;
         
-        std::reference_wrapper<TextureAllocator> m_textureAllocator;
+        TextureAllocator * m_textureAllocator;
 
         
-        void SetLightUniform(std::vector<Light>& lights, EnvironmentDescription& environment);
-        void SetTransformUniform(glm::mat4 projection, glm::mat4 view);
-        void RenderShadowMap(Scene& scene);
-      
+        void setLightUniform(std::vector<Light>& lights, EnvironmentDescription& environment);
+        void setTransformUniform(glm::mat4 projection, glm::mat4 view);
+        void renderShadowMap(Scene& scene);
 
     public:
 
 
         inline ForwardPipeline() { }
         
-        ForwardPipeline(TextureAllocator& textureAllocator);
+        ForwardPipeline(TextureAllocator* textureAllocator);
 
-        void Render(RenderSpecifications& specs) override; 
-        
+        void render(RenderSpecifications& specs) override; 
+        void setup(Renderer::RenderFeatures renderFeatures) override;
+
+
         inline ~ForwardPipeline() {}
 };
 

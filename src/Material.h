@@ -11,29 +11,18 @@
 #include <vector>
 #include <algorithm>
 
-
-
+typedef unsigned int MaterialHandle;
 
 class Material : public Program {
    
 
-    protected:
-    
-    
-        bool m_lightingEnabled = false;
     protected:
         void BindProgram();
     public:
         inline Material() {}
         Material(std::string vertexPath, std::string fragmentPath);
 
-
-      
-        inline unsigned int GetProgram() { return m_programID; }
-
-        inline bool GetLightingFlag() { return m_lightingEnabled; }
-        inline void SetLightingFlag(bool enabled) { m_lightingEnabled = enabled; }
-
+        inline unsigned int getProgram() { return m_programID; }
 
 };
 

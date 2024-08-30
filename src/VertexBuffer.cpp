@@ -23,7 +23,7 @@ void VertexBuffer::Bind() const
 }
 
 
-unsigned int VertexBuffer::AddMesh(std::vector<unsigned char>& data)
+unsigned int VertexBuffer::addMesh(std::vector<unsigned char>& data)
 {
 
     assert(!m_isStatic);
@@ -46,7 +46,7 @@ unsigned int VertexBuffer::AddMesh(std::vector<unsigned char>& data)
 
 };
 
-void VertexBuffer::RemoveMesh(unsigned int m_meshID){
+void VertexBuffer::removeMesh(unsigned int m_meshID){
 
     assert(!m_isStatic);
 

@@ -12,6 +12,9 @@
 
 #include <array>
 
+
+
+
 Renderer::Renderer(int width, int height) {
     
 
@@ -41,26 +44,28 @@ Renderer::Renderer(int width, int height) {
     m_bloom = HDRBloom(m_textureAllocator);
     
     
-    RuntimeTextureSpecs framebufferSpecs;
-    framebufferSpecs.width = 800;
-    framebufferSpecs.height = 600;
+    TextureAllocator::RuntimeTextureSpecification framebufferSpecs;
+    framebufferSpecs.width = width;
+    framebufferSpecs.height = height;
     framebufferSpecs.internal_format = GL_RGBA32F;
     framebufferSpecs.encoding = GL_FLOAT;
-
+    framebufferSpecs.resolution_group = 0;
 
     m_framebufferColor = m_textureAllocator.createTexture(framebufferSpecs);
     m_temporaryBuffer = m_textureAllocator.createTexture(framebufferSpecs);
     
 
 
-    RuntimeTextureSpecs depth_specs;
+    TextureAllocator::RuntimeTextureSpecification depth_specs;
 
     depth_specs.type = GL_TEXTURE_2D;
-    depth_specs.width = 800;
-    depth_specs.height = 600;
+    depth_specs.width = width;
+    depth_specs.height = height;
     depth_specs.filtering = GL_NEAREST;
     depth_specs.format = GL_DEPTH_COMPONENT;
     depth_specs.internal_format = GL_DEPTH_COMPONENT;
+    depth_specs.resolution_group = 0;
+
 
     m_framebufferDepth = m_textureAllocator.createTexture(depth_specs);
 
@@ -138,6 +143,8 @@ void Renderer::setResolution(int width, int height)
     m_width = width;
     m_height = height;
     m_projection = glm::perspective(glm::radians(45.0f), (float) width / height, 0.1f, 1000.0f);
+
+    m_textureAllocator.updateResolution(0,width,height);
 
 }
 
