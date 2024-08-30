@@ -2,7 +2,7 @@
 #include "Texture.h"
 
 
-TextureHandle TextureAllocator::CreateTexture(RuntimeTextureSpecs specs) {
+TextureHandle TextureAllocator::createTexture(RuntimeTextureSpecs specs) {
     Texture texture;
     texture.m_textureType = specs.type;
 
@@ -28,7 +28,7 @@ TextureHandle TextureAllocator::CreateTexture(RuntimeTextureSpecs specs) {
     glTexParameteri(specs.type, GL_TEXTURE_WRAP_S, specs.wrapping);
     glTexParameteri(specs.type, GL_TEXTURE_WRAP_T, specs.wrapping);
     if(specs.type == GL_TEXTURE_CUBE_MAP)
-        glTexParameteri(specs.type, GL_TEXTURE_WRAP_T, specs.wrapping);
+        glTexParameteri(specs.type, GL_TEXTURE_WRAP_R, specs.wrapping);
 
 
 
@@ -48,7 +48,7 @@ TextureHandle TextureAllocator::CreateTexture(RuntimeTextureSpecs specs) {
     return m_nextHandle;
 }
 
-TextureHandle TextureAllocator::CreateTexture(VirtualTextureSpecs specs) {
+TextureHandle TextureAllocator::createTexture(VirtualTextureSpecs specs) {
 
     Texture texture;
 

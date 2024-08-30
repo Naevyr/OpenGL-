@@ -26,7 +26,7 @@ class ForwardPipeline : public Pipeline{
 
         std::vector<Material> m_materials;
         
-        std::shared_ptr<TextureAllocator> m_textureAllocator;
+        std::reference_wrapper<TextureAllocator> m_textureAllocator;
 
         
         void SetLightUniform(std::vector<Light>& lights, EnvironmentDescription& environment);
@@ -39,7 +39,7 @@ class ForwardPipeline : public Pipeline{
 
         inline ForwardPipeline() { }
         
-        ForwardPipeline(std::shared_ptr<TextureAllocator> textureAllocator);
+        ForwardPipeline(TextureAllocator& textureAllocator);
 
         void Render(RenderSpecifications& specs) override; 
         

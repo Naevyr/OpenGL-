@@ -34,11 +34,6 @@ Scene Scene::Load(SceneDescription scene)
       printf("Failed to parse glTF\n");
     }   
 
-    
-    
-    
-
-
 
     
 }

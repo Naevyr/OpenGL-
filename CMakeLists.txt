@@ -20,6 +20,7 @@ add_subdirectory(lib/external/tinygltf)
 file(GLOB_RECURSE LOCAL_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(opengl_plus ${LOCAL_SOURCES})
+set_property(TARGET opengl_plus PROPERTY CXX_STANDARD 20)
 
 target_include_directories(opengl_plus PRIVATE lib/external)
 target_include_directories(opengl_plus PRIVATE lib/external/glad/include)

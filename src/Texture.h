@@ -29,15 +29,17 @@ class Texture {
        
 
 
-        inline unsigned int GetTextureID() const { return m_textureID; }
-        inline unsigned int GetTextureHandle() const { return m_textureBindlessHandle; }
+       
+        inline unsigned int getHandle() const { return m_textureBindlessHandle; }
+        inline unsigned int getID() const { return m_textureID; }
+        inline int getWidth() const  { return m_width; }
+        inline int getHeight() const { return m_height; } 
+        inline unsigned int getFormat() const {return m_format; }   
+        inline unsigned int getInternalFormat() const {return m_internalFormat; }   
 
-        inline int GetWidth() const  { return m_width; }
-        inline int GetHeight() const { return m_height; } 
-        inline unsigned int GetFormat() const {return m_format; }   
-        inline unsigned int GetInternalFormat() const {return m_internalFormat; }   
+        inline unsigned int getType() const { return m_textureType; }
 
-        inline unsigned int GetTextureType() const { return m_textureType; }
+
 
 
         

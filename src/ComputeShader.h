@@ -1,7 +1,7 @@
 #pragma once
 #include "Program.h"
 #include <string>
-
+#include <glad/glad.h>
 
 
 class ComputeShader : public Program {
@@ -10,9 +10,8 @@ class ComputeShader : public Program {
         inline ComputeShader() {}
         ComputeShader(std::string path);
         void Dispatch(glm::ivec3 axis);
+        
 
-
-        void SetTexture(unsigned int unit, Texture& texture);
-    
-        void SetTexture(unsigned int unit, Texture& texture, int mipmap, unsigned int usage, std::string samplerName = "");
+     
+        void SetTexture(std::string name, Texture& texture, unsigned int mipmap = 0, unsigned int usage = GL_DYNAMIC_COPY);
 };

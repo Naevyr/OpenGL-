@@ -77,27 +77,9 @@ void ComputeShader::Dispatch(glm::ivec3 groupCount) {
     glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
-void ComputeShader::SetTexture(unsigned int unit, Texture& texture)
-{
-    ComputeShader::SetTexture(unit, texture, 0, GL_READ_WRITE);
-}
-void ComputeShader::SetTexture(unsigned int unit, Texture& texture, int mipmap, unsigned int usage, std::string samplerName) {
+ void SetUniform(std::string name, Texture& texture, unsigned int mipmap = 0, unsigned int usage = GL_DYNAMIC_COPY) {
     
-    Bind();
-
-    if(samplerName == "")
-    {
-        glBindImageTexture(unit, texture.GetTextureID(), mipmap, GL_FALSE, 0, usage, texture.GetInternalFormat());
-        return;
-    }   
+    GLuint64 imageHandle = glGetImageHandleARB(texture.GetTextureID(), mipmap, GL_FALSE,0, usage);
+    glMakeImageHandleResidentARB(imageHandle, GL_READ_ONLY);
     
-
-    glActiveTexture(GL_TEXTURE0 + unit); 
-    
-    glBindTexture(texture.GetTextureType(), texture.GetTextureID());
-
-    GLint inputTexLocation = glGetUniformLocation(m_programID, samplerName.c_str());
-    glUniform1i(inputTexLocation, unit);  
-
-    SetUniform<int>("mipmapLevel", mipmap);
 }

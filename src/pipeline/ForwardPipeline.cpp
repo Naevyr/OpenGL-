@@ -32,7 +32,7 @@ ForwardPipeline::ForwardPipeline(std::shared_ptr<TextureAllocator> textureAlloca
     shadowMapSpecs.encoding = GL_FLOAT;
     shadowMapSpecs.type = GL_TEXTURE_2D_ARRAY;
     shadowMapSpecs.depth = 20;
-    m_shadowMap = m_textureAllocator->CreateTexture(shadowMapSpecs); 
+    m_shadowMap = m_textureAllocator->createTexture(shadowMapSpecs); 
 
     
 
@@ -64,7 +64,7 @@ void ForwardPipeline::Render(RenderSpecifications& specs) {
     
     while (primitiveGroup.next_pass.has_value())
     {
-        for(auto&& primitive : primitiveGroup.primitives)
+        for(auto&& primitive : primitiveGroup.)
         {
 
         }
@@ -137,7 +137,7 @@ unsigned int ForwardPipeline::LoadMaterial(MaterialDescription materialDefinitio
         LocalTextureSpecs<1> specs;
         specs.path = {albedoPath};
         specs.format = GL_RGB;
-        Texture texture = Texture::CreateTexture(specs);
+        Texture texture = Texture::createTexture(specs);
 
         global_textures.push_back(texture);
         local_textures[albedoPath] =  global_textures.size() - 1;
@@ -155,7 +155,7 @@ unsigned int ForwardPipeline::LoadMaterial(MaterialDescription materialDefinitio
         LocalTextureSpecs<1> specs;
         specs.path = {normalPath};
         specs.format = GL_RGB;
-        Texture texture = Texture::CreateTexture(specs);
+        Texture texture = Texture::createTexture(specs);
         global_textures.push_back(texture);
         local_textures[normalPath] =  global_textures.size() - 1;
         material.SetUniform<Texture&>("u_Normal",global_textures[global_textures.size() - 1]);

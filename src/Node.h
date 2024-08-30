@@ -6,13 +6,15 @@
 #include <optional>
 
 
+typedef unsigned int NodeID; 
+
 class Node {
     
     private:
-        
-        std::vector<std::shared_ptr<Node>> m_children;
-        std::optional<std::shared_ptr<Node>> m_parent;
-    
+        NodeID m_nodeID = 0;
+
+        NodeID m_parent = 0;
+        std::vector<NodeID> m_children;
 
     protected:
         glm::vec3 m_position;
@@ -31,11 +33,10 @@ class Node {
         inline void setScale(glm::vec3 scale) { m_scale = scale; }
         inline void setOrientation(glm::quat orientation) { m_orientation = orientation; }
 
-        inline void addChild(std::unique_ptr<Node> child) { m_children.push_back(std::move(child)); }
-        inline void setParent(std::unique_ptr<Node> parent) { m_parent = std::move(parent); }
+
+
+        inline void addChild(NodeID child) { m_children.push_back(child); }
+        inline void setParent(NodeID parent ) { m_parent = m_nodeID;  }
         inline void removeAt(int index) { m_children.erase(m_children.begin() + index); }
 
-
-        inline std::vector<std::unique_ptr<Node>>& getChildren() { return m_children; }
-        inline std::optional<std::unique_ptr<Node>>& getParent() { return m_parent; }
 };

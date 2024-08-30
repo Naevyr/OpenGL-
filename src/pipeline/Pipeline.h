@@ -9,7 +9,6 @@
 #include <vector>
 
 
-
 struct RenderSpecifications;
 class Pipeline {
   
@@ -27,9 +26,11 @@ class Pipeline {
 struct RenderSpecifications {
 
     Scene& scene;
+
+    
     glm::mat4 projection;
     glm::mat4 view;
 
-    Texture& colorTexture;
-    Texture& depthTexture;
+    TextureHandle colorTexture;
+    TextureHandle depthTexture;
 };

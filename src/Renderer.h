@@ -16,29 +16,33 @@ class Renderer {
     private: 
         
         ForwardPipeline m_pipeline;
+        TextureAllocator m_textureAllocator;
 
 
-        int m_framebufferColor;
-        int m_framebufferDepth;
-        int m_temporaryBuffer;
 
 
-        std::unique_ptr<TextureAllocator> m_textureAllocator;
+        TextureHandle m_framebufferColor;
+        TextureHandle m_framebufferDepth;
+        TextureHandle m_temporaryBuffer;
+
+
 
 
 
         HDRBloom m_bloom;
-        glm::mat4 m_Projection, m_View;
+
+        
+        glm::mat4 m_projection, m_view;
 
 
         int m_width, m_height;
 
 
         unsigned int m_mainPassFBO;
-        unsigned int m_quadVAO;
 
-        void SetTransformUniform(glm::mat4 projection, glm::mat4 view);
-        void DrawQuad(Texture &texture);
+
+        static unsigned int s_quadVAO;
+        static Material s_quadMaterial;
 
 
     public:
@@ -48,12 +52,13 @@ class Renderer {
         
 
         
-        void SetScene(SceneDescription &scene);
-        void SetResolution(int width, int height);
+        void setScene(SceneDescription &scene);
+        void setResolution(int width, int height);
         
 
 
 
         void Render();
 
+        static void DrawQuad(Texture &texture);
 };

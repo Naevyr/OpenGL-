@@ -6,7 +6,7 @@ class Texture;
 
 
 template <size_t N>
-TextureHandle TextureAllocator::CreateTexture(LocalTextureSpecs<N> specs)
+TextureHandle TextureAllocator::createTexture(LocalTextureSpecs<N> specs)
 {
 
 
@@ -24,9 +24,12 @@ TextureHandle TextureAllocator::CreateTexture(LocalTextureSpecs<N> specs)
     runtime_spec.depth = specs.type == GL_TEXTURE_CUBE_MAP ? 1 : N;
 
 
-    Texture texture = TextureAllocator::CreateTexture(runtime_spec);
+    TextureHandle handle = TextureAllocator::createTexture(runtime_spec);
 
-    texture.Bind();
+    Texture& texture = m_textures[handle];
+
+
+    glBindTexture(specs.type,texture.GetTextureID());
 
     if(N > 1)
     {
@@ -52,9 +55,6 @@ TextureHandle TextureAllocator::CreateTexture(LocalTextureSpecs<N> specs)
 
 
 
-    m_nextHandle++;
-    m_textures[m_nextHandle] = texture;
-    
 
-    return m_nextHandle;
+    return handle;
 }

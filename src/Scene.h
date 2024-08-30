@@ -24,10 +24,17 @@ class Scene
 {
     private:
 
-        std::vector<Primitive&> m_primitives;
-        Camera m_Camera;
+        std::vector<NodeID> m_primitives;
+        std::vector<NodeID> m_lights;
+
+        std::map<NodeID, Node> m_nodes;
+        
+
+        NodeID m_rootNode;
+        NodeID m_Camera;
+
+
         EnvironmentDescription m_Environment;
-        Node m_rootNode;
 
 
     public:
@@ -35,12 +42,12 @@ class Scene
 
 
 
-        inline void SetEnvironment(EnvironmentDescription environment) { m_Environment = environment; }
-        inline EnvironmentDescription& GetEnvironment() { return m_Environment; }
+        inline void setEnvironment(EnvironmentDescription environment) { m_Environment = environment; }
+        inline EnvironmentDescription& getEnvironment() { return m_Environment; }
 
-        PrimitiveGroup GetPrimitiveGroup();
+        PrimitiveGroup getPrimitiveGroup();
 
-        inline Camera& GetCamera() { return m_Camera; }
+        inline Camera& getCamera() { return std::dynamic_cast<Camera&>(&m_nodes[m_Camera]); } 
 
         static Scene Load(SceneDescription description);
 
