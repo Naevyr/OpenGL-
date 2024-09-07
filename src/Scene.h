@@ -13,8 +13,7 @@
 #include "scene/EnvironmentDescription.h"
 
 struct PrimitiveGroup {
-    std::span<Primitive&> primitives;
-    std::optional<PrimitiveGroup> next_pass;
+    std::span<Primitive> primitives;
 };
 
 

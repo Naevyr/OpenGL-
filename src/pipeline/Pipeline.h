@@ -19,10 +19,14 @@ class Pipeline {
         Pipeline();
         unsigned int m_ShadowFB;
         TextureHandle m_shadowMap;
-
+        
         
 
         unsigned int m_nextMaterialHandle = 0;
+
+
+        void renderShadowMap(Scene& scene);
+
 
     public:
         virtual void render(RenderSpecifications& specs) = 0;

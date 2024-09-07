@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PostProcessingEffect.h"
+#include "TextureAllocator.h"
 
 
 template <class T>
@@ -11,10 +12,10 @@ class SinglePassPostProcessingEffect : public PostProcessingEffect {
 
     public:
         inline SinglePassPostProcessingEffect(){}
-        SinglePassPostProcessingEffect(std::string shaderPath);
+        SinglePassPostProcessingEffect(std::string shaderPath, TextureAllocator& textureAllocator);
         
         
-        void Run(Texture& input, Texture& output);
+        void Run(TextureHandle input, TextureHandle output);
 };
 
 

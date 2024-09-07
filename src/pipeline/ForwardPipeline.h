@@ -1,5 +1,5 @@
 #pragma once
-#include "Pipeline.h"
+#include "pipeline/Pipeline.h"
 #include "Material.h"
 #include "Light.h"
 #include "scene/EnvironmentDescription.h"
@@ -9,7 +9,7 @@
 #include <vector>
 
 
-class ForwardPipeline : public Pipeline{
+class ForwardPipeline : public Pipeline {
 
 
     private:
@@ -29,19 +29,19 @@ class ForwardPipeline : public Pipeline{
 
         std::vector<Material> m_materials;
         
-        TextureAllocator * m_textureAllocator;
+        std::weak_ptr<TextureAllocator> m_textureAllocator;
 
         
         void setLightUniform(std::vector<Light>& lights, EnvironmentDescription& environment);
         void setTransformUniform(glm::mat4 projection, glm::mat4 view);
-        void renderShadowMap(Scene& scene);
+
 
     public:
 
 
         inline ForwardPipeline() { }
         
-        ForwardPipeline(TextureAllocator* textureAllocator);
+        ForwardPipeline( std::shared_ptr<TextureAllocator> textureAllocator);
 
         void render(RenderSpecifications& specs) override; 
         void setup(Renderer::RenderFeatures renderFeatures) override;

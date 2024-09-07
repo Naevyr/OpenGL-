@@ -4,7 +4,7 @@
 #include <optional>
 
 
-struct StaticMeshDescription {
+struct MeshDescription {
 
     std::string filePath;
     std::optional<MaterialDescription> material;

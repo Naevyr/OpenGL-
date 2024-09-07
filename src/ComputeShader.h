@@ -2,7 +2,7 @@
 #include "Program.h"
 #include <string>
 #include <glad/glad.h>
-
+#include <glm/glm.hpp>
 
 class ComputeShader : public Program {
      
@@ -13,5 +13,5 @@ class ComputeShader : public Program {
         
 
      
-        void SetTexture(std::string name, Texture& texture, unsigned int mipmap = 0, unsigned int usage = GL_DYNAMIC_COPY);
+        void SetTexture(std::string name, Texture& texture, unsigned int usage, unsigned int mipmap = 0);
 };

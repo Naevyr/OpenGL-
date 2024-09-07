@@ -62,7 +62,7 @@ struct TextureAllocator::TextureSpecification {
     TextureHandle override = 0;
 };
 
-struct TextureAllocator::RuntimeTextureSpecification  : public TextureAllocator::TextureSpecification{
+struct TextureAllocator::RuntimeTextureSpecification  : public TextureAllocator::TextureSpecification {
     int width;
     int height;
     int depth;

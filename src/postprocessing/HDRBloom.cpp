@@ -1,4 +1,5 @@
 #include "HDRBloom.h"
+#include "TextureAllocator.h"
 #include <algorithm>
 
 
@@ -14,30 +15,30 @@ HDRBloom::HDRBloom(TextureAllocator& textureAllocator) {
     m_add = ComputeShader("resources/shaders/compute/add.glsl");
 
 
-    RuntimeTextureSpecs workTextureSpecs;
+    TextureAllocator::RuntimeTextureSpecification workTextureSpecs;
     workTextureSpecs.width = 800;
     workTextureSpecs.height = 600;
     workTextureSpecs.format = GL_RGBA;
     workTextureSpecs.internal_format = GL_RGBA32F;
     workTextureSpecs.mipmap_levels = 6;
-    m_workTexture = m_textureAllocator.get().createTexture(workTextureSpecs);
+    m_workTexture = m_textureAllocator->createTexture(workTextureSpecs);
 
 
-    RuntimeTextureSpecs temporarySpecs;
+    TextureAllocator::RuntimeTextureSpecification temporarySpecs;
     temporarySpecs.width = 800;
     temporarySpecs.height = 600;
     temporarySpecs.format = GL_RGBA;
     temporarySpecs.internal_format = GL_RGBA32F;
     temporarySpecs.mipmap_levels = 6;
-    m_temporary = m_textureAllocator.get().createTexture(temporarySpecs);
+    m_temporary = m_textureAllocator->createTexture(temporarySpecs);
 
 }
 
 
-void HDRBloom::Run(Texture& input, Texture& output) {
+void HDRBloom::Run(TextureHandle input, TextureHandle output) {
 
-    Texture& temporary = m_textureAllocator.get().getTexture(m_temporary);
-    Texture& workTexture = m_textureAllocator.get().getTexture(m_workTexture);
+    Texture& temporary = m_textureAllocator->getTexture(m_temporary);
+    Texture& workTexture = m_textureAllocator->getTexture(m_workTexture);
 
 
     m_brightPass.Run(input, temporary);

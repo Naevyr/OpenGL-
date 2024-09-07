@@ -1,18 +1,18 @@
 #pragma once
 
 #include <string>
-
+#include <filesystem>
 
 struct MaterialDescription {
-    std::string albedo;
-    std::string normal;
-    std::string roughness;
-    std::string specular;
-    std::string metallic;
-    std::string emission;
-    std::string displacement;
+    std::optional<std::filesystem::path> albedo;
+    std::optional<std::filesystem::path> normal;
+    std::optional<std::filesystem::path> roughness;
+    std::optional<std::filesystem::path> specular;
+    std::optional<std::filesystem::path> metallic;
+    std::optional<std::filesystem::path> emission;
+    std::optional<std::filesystem::path> displacement;
 
-    std::string opacity;
+    std::optional<std::filesystem::path> opacity;
 
 
 

@@ -8,7 +8,12 @@
 
 
 #include "Application.h"
+#include "Light.h"
+#include "Primitive.h"
 #include "UI/UI.h"
+#include "scene/LightDescription.h"
+#include "scene/MeshDescription.h"
+#include "scene/SceneDescription.h"
 
 
 void processInput(GLFWwindow *window);
@@ -80,16 +85,29 @@ Application::~Application() {
 void Application::Run() 
 {
 
-    MaterialDescription defsTextured;
-    defsTextured.albedoPath = "resources/textures/albedo.png";
-    defsTextured.normalPath = "resources/textures/normal.png";
-    defsTextured.lightingEnabled = true;
+    MaterialDescription texturedMaterialDescription {
+        .albedo = "albedo.png",
+        .normal = "normal.png",
+    };
 
-    auto cube = Mesh("resources/3D/cube.obj",m_renderer.LoadMaterial(defsTextured));
-    
+    MeshDescription texturedCubeDescription {
+        .filePath = "cube.obj",
+        .material = texturedMaterialDescription,
+    };
 
     
+    LightDescription {
+        .type = Light::Type::DIRECTIONAL,
+        .position = glm::vec3(0,6,0),
+        .color = glm::vec3(1,1,1),
+        .intensity = 1,
+    }
+
     
+    SceneDescription scene {
+        .additional_lights
+        .additional_meshes = {texturedCubeDescription}
+    }
     Scene scene;
     Environment environment;
     environment.globalIllumination = glm::vec3(.1, .4, 1.0);

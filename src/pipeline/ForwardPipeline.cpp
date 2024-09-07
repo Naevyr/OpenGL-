@@ -7,7 +7,7 @@
 
 
 
-ForwardPipeline::ForwardPipeline(TextureAllocator* textureAllocator) 
+ForwardPipeline::ForwardPipeline(std::shared_ptr<TextureAllocator> textureAllocator) 
                 : m_textureAllocator(textureAllocator)
 {
     glGenFramebuffers(1, &m_ShadowFB);

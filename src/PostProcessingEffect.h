@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
-#include "Texture.h"
+
+#include "TextureAllocator.h"
 
 class PostProcessingEffect {
 
@@ -8,7 +8,7 @@ class PostProcessingEffect {
         PostProcessingEffect();
 
     public:
-        virtual void Run(Texture& input, Texture& output) = 0;
+        virtual void Run(TextureHandle input, TextureHandle output) = 0;
 
 };
 

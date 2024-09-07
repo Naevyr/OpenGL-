@@ -1,13 +1,14 @@
 #pragma once
 
-#include "Scene.h"
-#include "Material.h"
-#include "pipeline/ForwardPipeline.h"
 
+
+#include "Material.h"
 #include "postprocessing/HDRBloom.h"
 
 #include "scene/SceneDescription.h"
+#include <memory>
 
+class Pipeline;
 
 class Renderer {
 
@@ -17,8 +18,8 @@ class Renderer {
 
     private: 
         
-        ForwardPipeline m_pipeline;
-        TextureAllocator m_textureAllocator;
+        std::unique_ptr<Pipeline> m_pipeline;
+        std::shared_ptr<TextureAllocator> m_textureAllocator;
 
 
 
@@ -27,11 +28,10 @@ class Renderer {
         TextureHandle m_framebufferDepth;
         TextureHandle m_temporaryBuffer;
 
-
-
-
+        
 
         HDRBloom m_bloom;
+
 
         
         glm::mat4 m_projection, m_view;
