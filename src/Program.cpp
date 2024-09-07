@@ -86,6 +86,6 @@ template<>
 void Program::SetUniform(std::string name, Texture& value) {
     Bind();
     unsigned int location = glGetUniformLocation(m_programID, name.c_str());
-    glUniformHandleui64ARB(location,value.GetTextureID());
+    glUniformHandleui64ARB(location,value.getHandle());
 }
 

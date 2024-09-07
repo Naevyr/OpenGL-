@@ -5,12 +5,17 @@
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_glfw.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
+#include <memory>
 
 
 #include "Application.h"
 #include "Light.h"
 #include "Primitive.h"
+#include "Renderer.h"
 #include "UI/UI.h"
+#include "glm/ext/vector_float3.hpp"
+#include "scene/CameraDescription.h"
+#include "scene/EnvironmentDescription.h"
 #include "scene/LightDescription.h"
 #include "scene/MeshDescription.h"
 #include "scene/SceneDescription.h"
@@ -72,7 +77,7 @@ Application::Application()
 
 
    
-    m_renderer.Init(m_width, m_height);
+    m_renderer = std::make_unique<Renderer>(m_width,m_height);
 
 }
 
@@ -90,64 +95,33 @@ void Application::Run()
         .normal = "normal.png",
     };
 
-    MeshDescription texturedCubeDescription {
+    MeshDescription cube {
         .filePath = "cube.obj",
         .material = texturedMaterialDescription,
     };
 
     
-    LightDescription {
-        .type = Light::Type::DIRECTIONAL,
+    LightDescription light {
+        .type = LightDescription::Type::DIRECTIONAL,
         .position = glm::vec3(0,6,0),
         .color = glm::vec3(1,1,1),
         .intensity = 1,
-    }
+    };
 
     
-    SceneDescription scene {
-        .additional_lights
-        .additional_meshes = {texturedCubeDescription}
-    }
-    Scene scene;
-    Environment environment;
-    environment.globalIllumination = glm::vec3(.1, .4, 1.0);
-    environment.globalIlluminationIntensity = .2;
-    environment.skyboxPath = "resources/textures/skybox";
-
-    auto skybox = Mesh("resources/3D/cube.obj",m_renderer.LoadSkyboxMaterial("resources/textures/skybox"));
-    skybox.setScale(glm::vec3(300,300,300));
-
+    EnvironmentDescription environment {};
     
-    environment.skybox = skybox;
+    CameraDescription camera {
+        .position = glm::vec3(0,0,-15)
+    };
 
 
-    scene.SetEnvironment(environment);
-    
-    scene.AddMesh(cube);
-
-    
-    MaterialDescription defaultMaterial = MaterialDescription();
-    defaultMaterial.lightingEnabled = true;
-
-    Mesh plane = Mesh("resources/3D/cube.obj",m_renderer.LoadMaterial(defaultMaterial));
-
-    plane.setPosition(glm::vec3(0, -3, 0));
-    plane.setScale(glm::vec3(10, 0.1, 10));
-    scene.AddMesh(plane);
-    
-    scene.GetCamera().setPosition(glm::vec3(0, 0, -25));
-    
-
-
-    Light light;
-    light.color = glm::vec3(1, 0, 1);
-    light.position = glm::vec3(0, 10, 0);
-    light.intensity = 1.0f;
-    light.type = LightType::DIRECTIONAL;
-    light.direction = glm::normalize(glm::vec3(0.000001, -1, 0));
-    scene.AddLight(light);
-    scene.AddLight(light);
-
+    SceneDescription sceneDescription {
+        .additional_meshes = {cube},
+        .additional_lights = {light},
+        .environment = environment,
+        
+    };
 
 
     double previousTime = glfwGetTime();
@@ -155,6 +129,10 @@ void Application::Run()
 
     PostProcessingEffects effects;
 
+    
+
+    Scene& scene = m_renderer->loadScene(sceneDescription);
+    
 
     while (!glfwWindowShouldClose(m_window))
     {
@@ -175,13 +153,14 @@ void Application::Run()
   
         processMovement(delta, &direction,&rotation,&toggleSpeed);
         
+        
 
-        scene.GetCamera().movementInput(direction, delta);
-        scene.GetCamera().rotationInput(rotation, delta);
-        scene.GetCamera().setSpeeding(toggleSpeed);
+        scene.getCamera().movementInput(direction, delta);
+        scene.getCamera().rotationInput(rotation, delta);
+   
 
 
-        m_renderer.Render(scene,effects);
+        m_renderer->render();
 
 
 

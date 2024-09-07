@@ -2,7 +2,7 @@
 #include "Light.h"
 
 
-class LightComponent
+class LightComponent 
 {
     public:
         static void Render(Light& light, bool* keepOpen);

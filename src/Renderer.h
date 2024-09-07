@@ -3,10 +3,12 @@
 
 
 #include "Material.h"
+#include "Scene.h"
 #include "postprocessing/HDRBloom.h"
 
 #include "scene/SceneDescription.h"
 #include <memory>
+#include <optional>
 
 class Pipeline;
 
@@ -21,7 +23,7 @@ class Renderer {
         std::unique_ptr<Pipeline> m_pipeline;
         std::shared_ptr<TextureAllocator> m_textureAllocator;
 
-
+        std::optional<Scene> m_currentScene;
 
 
         TextureHandle m_framebufferColor;
@@ -49,25 +51,27 @@ class Renderer {
 
     public:
 
-        inline Renderer() { };
+    
         Renderer(int width, int height);
         
 
         
-        void setScene(SceneDescription &scene);
+        Scene& loadScene(SceneDescription& scene);
+
+
         void setResolution(int width, int height);
         
 
 
-
-        void Render();
-
-        static void DrawQuad(Texture &texture);
+        void render();
+        static void DrawQuad(Texture& texture);
 };
 
 
 enum class Renderer::RenderFeatures {
-    RENDER_FEATURE_LIGHTING = 1 << 0,
-    RENDER_FEATURE_SHADOWS = 1 << 1,
-    RENDER_FEATURE_SKYBOX = 1 << 2,
+    LIGHTING = 1 << 0,
+    SHADOWS = 1 << 1,
+    SKYBOX = 1 << 2,
+    BLOOM = 1 << 3,
+
 };

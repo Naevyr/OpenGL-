@@ -4,14 +4,14 @@
 struct LightDescription
 {   
 
-    enum LightType
+    enum Type
     {
         POINT = 0,
         DIRECTIONAL = 1,
         SPOT = 2
     };
 
-    LightType type;
+    Type type;
     glm::vec3 position;
     glm::vec3 color;
     float intensity;

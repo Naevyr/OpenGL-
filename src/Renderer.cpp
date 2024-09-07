@@ -1,8 +1,13 @@
 
 #include "Renderer.h"
 
+#include "TextureAllocator.h"
+#include "pipeline/ForwardPipeline.h"
+#include "postprocessing/HDRBloom.h"
 #include "scene/EnvironmentDescription.h"
 #include "pipeline/Pipeline.h"
+#include "scene/SceneDescription.h"
+#include <memory>
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
@@ -33,10 +38,10 @@ Renderer::Renderer(int width, int height) {
     glDepthMask(GL_TRUE);
 
 
-    m_textureAllocator = TextureAllocator();
+    m_textureAllocator = std::make_shared<TextureAllocator>();
 
 
-    m_pipeline = ForwardPipeline(m_textureAllocator);
+    m_pipeline = std::make_unique<ForwardPipeline>(m_textureAllocator);
 
 
   
@@ -51,8 +56,8 @@ Renderer::Renderer(int width, int height) {
     framebufferSpecs.encoding = GL_FLOAT;
     framebufferSpecs.resolution_group = 0;
 
-    m_framebufferColor = m_textureAllocator.createTexture(framebufferSpecs);
-    m_temporaryBuffer = m_textureAllocator.createTexture(framebufferSpecs);
+    m_framebufferColor = m_textureAllocator->createTexture(framebufferSpecs);
+    m_temporaryBuffer = m_textureAllocator->createTexture(framebufferSpecs);
     
 
 
@@ -67,7 +72,7 @@ Renderer::Renderer(int width, int height) {
     depth_specs.resolution_group = 0;
 
 
-    m_framebufferDepth = m_textureAllocator.createTexture(depth_specs);
+    m_framebufferDepth = m_textureAllocator->createTexture(depth_specs);
 
 
 
@@ -76,13 +81,17 @@ Renderer::Renderer(int width, int height) {
 
 }
 
+Scene& Renderer::loadScene(SceneDescription& description){
+    m_currentScene = Scene(description,m_textureAllocator);
+    return m_currentScene.value();
+};
 
-void Renderer::Render(Scene& scene, PostProcessingEffects& effects) {
+void Renderer::render() {
 
 
-    Texture& fbColor = m_textureAllocator.getTexture(m_framebufferColor);
-    Texture& fbDepth = m_textureAllocator.getTexture(m_framebufferDepth);
-    Texture& tmp = m_textureAllocator.getTexture(m_temporaryBuffer);
+    Texture& fbColor = m_textureAllocator->getTexture(m_framebufferColor);
+    Texture& fbDepth = m_textureAllocator->getTexture(m_framebufferDepth);
+    Texture& tmp = m_textureAllocator->getTexture(m_temporaryBuffer);
 
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_mainPassFBO);
@@ -92,18 +101,18 @@ void Renderer::Render(Scene& scene, PostProcessingEffects& effects) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-    m_View = scene.GetCamera().getOrientation() * glm::translate(glm::mat4(1), scene.GetCamera().getPosition());    
-    RenderSpecifications specs = {
+    m_view = m_currentScene.value().getCamera().getOrientation() * glm::translate(glm::mat4(1), m_currentScene.value().getCamera().getPosition());    
+    Pipeline::RenderSpecifications specs = {
         
-        .scene = scene,
+        .scene = m_currentScene.value(),
         .projection = m_projection,
-        .view = m_View,
+        .view = m_view,
         .colorTexture = m_framebufferColor,
         .depthTexture = m_framebufferDepth,
     };
 
     
-    m_pipeline.Render(specs);
+    m_pipeline->render(specs);
 
 
     glBindFramebuffer(GL_FRAMEBUFFER, m_mainPassFBO);
@@ -112,27 +121,12 @@ void Renderer::Render(Scene& scene, PostProcessingEffects& effects) {
     glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, fbDepth.getID(), 0);
 
 
-    Mesh skybox = scene.GetEnvironment().skybox;
-
+    
    
-    auto skyboxMaterial = m_materials[skybox.getMaterialIndex()];
-    skyboxMaterial.Bind();
-    skyboxMaterial.SetUniform<glm::mat4>("u_Projection", m_projection);
-    skyboxMaterial.SetUniform<glm::mat4>("u_View", m_View);
-    skybox.Draw(skyboxMaterial);
-
     
-    if(effects.bloom){
-
-        m_bloom.Run(m_textureAllocator.getTexture(m_framebufferColor), m_textureAllocator.getTexture(m_temporaryBuffer));
-        glCopyImageSubData( tmp.getID(), GL_TEXTURE_2D, 0 , 0, 0, 0,
-                fbColor.getID(), GL_TEXTURE_2D,  0, 0, 0, 0,
-                fbColor.getWidth() , fbColor.getHeight(), 1);
-    }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  
     
-    Renderer::DrawQuad(m_textureAllocator.getTexture(m_framebufferColor));
+    Renderer::DrawQuad(m_textureAllocator->getTexture(m_framebufferColor));
 }
 
 
@@ -144,7 +138,7 @@ void Renderer::setResolution(int width, int height)
     m_height = height;
     m_projection = glm::perspective(glm::radians(45.0f), (float) width / height, 0.1f, 1000.0f);
 
-    m_textureAllocator.updateResolution(0,width,height);
+    m_textureAllocator->updateResolution(0,width,height);
 
 }
 

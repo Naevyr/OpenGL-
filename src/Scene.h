@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <memory>
 #include <vector>
 #include <span>
 
@@ -9,6 +10,7 @@
 #include "Mesh.h"
 #include "Light.h"
 #include "Node.h"
+#include "TextureAllocator.h"
 #include "scene/SceneDescription.h"
 #include "scene/EnvironmentDescription.h"
 
@@ -31,23 +33,24 @@ class Scene
 
         NodeID m_rootNode;
         NodeID m_Camera;
-
-
         EnvironmentDescription m_Environment;
 
 
     public:
-        inline Scene() {}
+        Scene(SceneDescription description, std::shared_ptr<TextureAllocator> textureAllocator);
 
 
 
         inline void setEnvironment(EnvironmentDescription environment) { m_Environment = environment; }
         inline EnvironmentDescription& getEnvironment() { return m_Environment; }
-
-        PrimitiveGroup getPrimitiveGroup();
-
         inline Camera& getCamera() { return (Camera&)m_nodes[m_Camera]; } 
 
-        static Scene Load(SceneDescription description);
+        std::vector<std::reference_wrapper<Light>> getLights();
+        std::vector<std::reference_wrapper<Mesh>> getMeshes();
+
+        
+        PrimitiveGroup getPrimitiveGroup();
+
+
 
 };  

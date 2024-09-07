@@ -1,10 +1,10 @@
 #include "Blur.h"
 Blur::Blur(int blurSize) {
     m_blurSize = blurSize;
-    SinglePassPostProcessingEffect<ComputeShader>::SinglePassPostProcessingEffect<ComputeShader>("resources/shaders/compute/blur.glsl");
+    SinglePassPostProcessingEffect<ComputeShader>::SinglePassPostProcessingEffect("resources/shaders/compute/blur.glsl");
 }
 
-void Blur::Run(Texture& input, Texture& output) {
+void Blur::run(Texture& input, Texture& output) {
     m_program.SetUniform("u_blurSize", m_blurSize);
-    SinglePassPostProcessingEffect<ComputeShader>::Run(input, output);
+    SinglePassPostProcessingEffect<ComputeShader>::run(input, output);
 }

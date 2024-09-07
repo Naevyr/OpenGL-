@@ -1,12 +1,18 @@
 
 #include "pipeline/Pipeline.h"
+#include "glad/glad.h"
+#include <functional>
 
 void Pipeline::renderShadowMap(Scene& scene) {
  
-    std::vector<Light>& lights = scene.GetLights();
+
+    Texture& shadowmap = m_textureAllocator->getTexture(m_shadowMap);
+    std::vector<std::reference_wrapper<Light>> lights = scene.getLights();
     
     glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowFB);
-    m_shadowMap.Bind();
+
+
+    glBindTexture(GL_TEXTURE_3D, shadowmap.getID());
     glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT24, 256, 256, lights.size(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
 
@@ -15,7 +21,7 @@ void Pipeline::renderShadowMap(Scene& scene) {
 
     for (size_t i = 0; i < lights.size(); i++)
     {   
-        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_shadowMap.GetTextureID(), 0, i);
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, shadowmap.getID(), 0, i);
         glClear(GL_DEPTH_BUFFER_BIT);
 
 
@@ -24,22 +30,21 @@ void Pipeline::renderShadowMap(Scene& scene) {
 
         glm::mat4 lightProjectionMatrix;
 
-        switch (scene.GetLights()[i].type)
+        switch (lights[i].get().getType())
         {   
-            case LightType::DIRECTIONAL:
+            case Light::Type::DIRECTIONAL:
                 lightProjectionMatrix = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 0.1f, 100.0f);
                 break;
-            case LightType::SPOT:
+            case Light::Type::SPOT:
                 lightProjectionMatrix = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 50.0f);
                  
                 break;
-            case LightType::POINT:
+            case Light::Type::POINT:
                 throw  std::runtime_error("Point light not supported");
             default:
                 break;
         }
-
-        glm::vec3 direction = lights[i].direction;
+;
         glm::mat4 lightViewMatrix = glm::lookAt(lights[i].position, lights[i].position + direction, glm::vec3(0.0f, 1.0f, 0.0f));
         lightViewMatrix[1][1] *= -1;
 

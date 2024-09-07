@@ -3,8 +3,6 @@
 #include "Node.h"
 
 
-
-
 class Light : public Node
 {
 
@@ -18,6 +16,8 @@ class Light : public Node
         struct Uniform;
 
     private: 
+
+        friend class LightComponent;
         glm::vec3 m_color;
         float m_intensity;
         Type m_type;

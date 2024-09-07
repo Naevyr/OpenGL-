@@ -2,6 +2,7 @@
 
 #include "SinglePassPostProcessingEffect.h"
 #include "Material.h"
+#include "TextureAllocator.h"
 
 class HDRToneMapping :  public SinglePassPostProcessingEffect<Material> {
     private: 
@@ -12,5 +13,5 @@ class HDRToneMapping :  public SinglePassPostProcessingEffect<Material> {
         HDRToneMapping() {}
         HDRToneMapping(std::string shaderPath);
 
-        void Run(Texture& input, Texture& output) override;
+        void run(Texture& input, Texture& output) override;
 };

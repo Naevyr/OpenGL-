@@ -1,7 +1,6 @@
 #include "TextureAllocator.h"
 #include "Texture.h"
 #include <stb/stb_image.h>
-#include <iterator>
 #include <algorithm>
 
 

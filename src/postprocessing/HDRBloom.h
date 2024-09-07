@@ -3,7 +3,9 @@
 #include "PostProcessingEffect.h"
 #include "ComputeShader.h"
 #include "SinglePassPostProcessingEffect.h"
+#include "Texture.h"
 #include "TextureAllocator.h"
+#include <memory>
 
 class HDRBloom : public PostProcessingEffect {
     private:
@@ -18,15 +20,15 @@ class HDRBloom : public PostProcessingEffect {
 
         TextureHandle m_workTexture;
         TextureHandle m_temporary;
-        TextureAllocator*  m_textureAllocator;
+        std::shared_ptr<TextureAllocator>  m_textureAllocator;
 
         float m_bloomThreshold;
 
     public: 
         inline HDRBloom() {}
-        HDRBloom(TextureAllocator& textureAllocator);
+        HDRBloom(std::shared_ptr<TextureAllocator> textureAllocator);
         
         
-        void Run(TextureHandle input, TextureHandle output) override;
+        void run(Texture& input, Texture& output) override;
         inline ~HDRBloom() {} 
 };

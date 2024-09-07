@@ -2,6 +2,7 @@
 
 #include "Renderer.h"
 #include <GLFW/glfw3.h>
+#include <memory>
 
 
 class Application {
@@ -13,7 +14,7 @@ class Application {
 
         GLFWwindow * m_window;
 
-        Renderer m_renderer;
+        std::unique_ptr<Renderer> m_renderer;
 
 
         bool m_cameraControl = false;

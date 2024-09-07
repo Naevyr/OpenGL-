@@ -27,6 +27,8 @@ class Pipeline {
 
         void renderShadowMap(Scene& scene);
 
+        std::shared_ptr<TextureAllocator> m_textureAllocator;
+        Pipeline(std::shared_ptr<TextureAllocator> textureAllocator) : m_textureAllocator(textureAllocator) {};
 
     public:
         virtual void render(RenderSpecifications& specs) = 0;

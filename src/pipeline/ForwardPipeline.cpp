@@ -8,8 +8,11 @@
 
 
 ForwardPipeline::ForwardPipeline(std::shared_ptr<TextureAllocator> textureAllocator) 
-                : m_textureAllocator(textureAllocator)
-{
+                
+{  
+
+    
+
     glGenFramebuffers(1, &m_ShadowFB);
     glBindFramebuffer(GL_FRAMEBUFFER, m_ShadowFB);
     glEnable(GL_DEPTH_TEST);

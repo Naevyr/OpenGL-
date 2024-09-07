@@ -1,6 +1,8 @@
 #include "Scene.h"
+#include "TextureAllocator.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <memory>
 
 
 // Define these only in *one* .cc file.
@@ -12,7 +14,7 @@
 
 
 
-Scene Scene::Load(SceneDescription scene)
+Scene::Scene(SceneDescription scene, std::shared_ptr<TextureAllocator>)
 {
 
     tinygltf::Model model;

@@ -10,12 +10,12 @@ std::set<int> SceneComponent::m_displayedMeshes;
 void SceneComponent::Render(Scene& scene) {
 
 
-    std::vector<Light>& lights = scene.GetLights();
-    std::vector<Mesh>& meshes =  scene.GetMeshes();
+    auto lights = scene.getLights();
+    auto meshes =  scene.getMeshes();
 
-    glm::vec3 camPos = scene.GetCamera().getPosition();
+    glm::vec3 camPos = scene.getCamera().getPosition();
     ImGui::DragFloat3("Camera Position",&camPos[0]);
-    scene.GetCamera().setPosition(camPos);
+    scene.getCamera().setPosition(camPos);
     
     
     
@@ -88,9 +88,7 @@ void SceneComponent::Render(Scene& scene) {
 
 
     ImGui::SeparatorText("Environment");
-    ImGui::ColorPicker3("Background", &scene.GetEnvironment().globalIllumination[0]);
-    ImGui::DragFloat("Global Illumination Intensity", &scene.GetEnvironment().globalIlluminationIntensity, 0.01f, 0.0f, 1.0f);
-
+   
     
 
     

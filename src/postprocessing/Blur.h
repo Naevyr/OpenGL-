@@ -9,6 +9,6 @@ class Blur : public SinglePassPostProcessingEffect<ComputeShader> {
     public:
         inline Blur() {}
         Blur(int blurSize);
-        void Run(Texture& input, Texture& output);
+        void run(Texture& input, Texture& output) override;
 
 };
