@@ -1,6 +1,5 @@
 #pragma once
 
-
 struct PostProcessingEffects {
-    bool bloom;
+	bool bloom;
 };

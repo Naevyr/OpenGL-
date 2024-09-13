@@ -1,16 +1,10 @@
 
-
-#include <iostream>
 #include "Application.h"
 
+int main() {
+	Application app = Application();
 
-int main()
-{
-   
-    Application app = Application();
+	app.Run();
 
-    app.Run();
-
-
-    return 0;
+	return 0;
 }

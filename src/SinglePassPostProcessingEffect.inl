@@ -1,27 +1,23 @@
 #include "ComputeShader.h"
 #include "Material.h"
-
 #include "Texture.h"
-#include "TextureAllocator.h"
-
-
+#include "TextureManager.h"
 
 template <>
-inline SinglePassPostProcessingEffect<ComputeShader>::SinglePassPostProcessingEffect(std::string computeShaderPath) {
-    m_program = ComputeShader(computeShaderPath);
+inline SinglePassPostProcessingEffect<
+	ComputeShader>::SinglePassPostProcessingEffect(std::string computeShaderPath
+) {
+	m_program = ComputeShader(computeShaderPath);
 }
 
 template <>
-inline void SinglePassPostProcessingEffect<ComputeShader>::run(Texture& input, Texture& output) {
-    m_program.Bind();
-    
+inline void SinglePassPostProcessingEffect<ComputeShader>::run(
+	Texture& input, Texture& output
+) {
+	m_program.bind();
 
-    
-    m_program.SetTexture("u_input",input,0,GL_READ_ONLY);
-    m_program.SetTexture("u_output",output,0,GL_WRITE_ONLY);
+	m_program.SetTexture("u_input", input, 0, GL_READ_ONLY);
+	m_program.SetTexture("u_output", output, 0, GL_WRITE_ONLY);
 
-    m_program.Dispatch({output.getWidth(), output.getWidth(), 1});
-    
+	m_program.Dispatch({ output.getWidth(), output.getWidth(), 1 });
 }
-
-

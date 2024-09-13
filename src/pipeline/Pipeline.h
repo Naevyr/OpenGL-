@@ -1,57 +1,36 @@
 #pragma once
 
-
-#include "Renderer.h"
-#include "Scene.h"
-#include "TextureAllocator.h"
 #include <glm/glm.hpp>
 
+#include "RenderPass.h"
+#include "Renderer.h"
+#include "ResourceManager.h"
+#include "ResourceTypes.h"
+#include "Scene.h"
+
 class Pipeline {
+public:
+	struct RenderSpecifications;
 
-    public:
+private:
+	unsigned int m_ShadowFB;
+	TextureHandle m_shadowMap;
+	MaterialHandle m_shadowMapMaterial;
 
-        
-        struct RenderSpecifications;
+	std::shared_ptr<ResourceManager> m_resourceManager;
 
+	void renderShadowMap(Scene& scene);
 
-    protected:
+public:
+	Pipeline(std::shared_ptr<ResourceManager> resourceManager);
 
-        Pipeline();
-        unsigned int m_ShadowFB;
-        TextureHandle m_shadowMap;
-        
-        
-
-        unsigned int m_nextMaterialHandle = 0;
-
-
-        void renderShadowMap(Scene& scene);
-
-        std::shared_ptr<TextureAllocator> m_textureAllocator;
-        Pipeline(std::shared_ptr<TextureAllocator> textureAllocator) : m_textureAllocator(textureAllocator) {};
-
-    public:
-        virtual void render(RenderSpecifications& specs) = 0;
-        virtual void setup(Renderer::RenderFeatures features);
-
-        virtual MaterialHandle registerMaterial(MaterialDescription& description);
-
-
-        //Every pipeline should their own implementation of a material
-        //virtual unsigned int LoadMaterial(MaterialDescrip materialDefs, std::unordered_map<std::string, unsigned int>& local_textures,  std::vector<Texture>& global_textures) = 0;
+	void render(RenderSpecifications& specs);
+	void renderSubpass(RenderPassSpecs& renderPassSpecs);
 };
 
-
-
-
 struct Pipeline::RenderSpecifications {
+	Scene& scene;
 
-    Scene& scene;
-
-    
-    glm::mat4 projection;
-    glm::mat4 view;
-
-    TextureHandle colorTexture;
-    TextureHandle depthTexture;
+	TextureHandle colorTexture;
+	TextureHandle depthTexture;
 };

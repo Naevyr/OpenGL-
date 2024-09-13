@@ -3,41 +3,51 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <vector>
-#include <memory>
-#include <optional>
 
+#include "glm/fwd.hpp"
 
-typedef unsigned int NodeID; 
+typedef unsigned int NodeID;
 
 class Node {
-    
-    private:
-        NodeID m_nodeID = 0;
+private:
+	NodeID m_nodeID = 0;
 
-        NodeID m_parent = 0;
-        std::vector<NodeID> m_children;
+	Node* m_parent = nullptr;
+	std::vector<Node> m_children;
 
-    protected:
-        glm::vec3 m_position;
-        glm::vec3 m_scale;
-        glm::quat m_orientation;
+protected:
+	glm::vec3 m_localPosition = glm::vec3(0);
+	glm::vec3 m_localScale = glm::vec3(1);
+	glm::quat m_localOrientation = glm::quat();
 
-    
-    public: 
-        Node() {}
-    
-        inline glm::vec3 getPosition() { return m_position; }
-        inline glm::vec3 getScale() { return m_scale; }
-        inline glm::quat getOrientation() { return m_orientation; }
+	glm::vec3 m_globalPosition = glm::vec3(0);
+	glm::vec3 m_globalScale = glm::vec3(1);
+	glm::quat m_globalOrientation = glm::quat();
 
-        inline void setPosition(glm::vec3 position) { m_position = position; }
-        inline void setScale(glm::vec3 scale) { m_scale = scale; }
-        inline void setOrientation(glm::quat orientation) { m_orientation = orientation; }
+public:
+	Node(NodeID nodeID, Node* parent) : m_nodeID(nodeID), m_parent(parent) {}
 
+	inline glm::vec3 getPosition() { return m_localPosition; }
+	inline glm::vec3 getScale() { return m_localScale; }
+	inline glm::quat getOrientation() { return m_localOrientation; }
 
+	inline void setPosition(glm::vec3 position);
+	inline void setScale(glm::vec3 scale);
+	inline void setOrientation(glm::quat orientation);
 
-        inline void addChild(NodeID child) { m_children.push_back(child); }
-        inline void setParent(NodeID parent ) { m_parent = m_nodeID;  }
-        inline void removeAt(int index) { m_children.erase(m_children.begin() + index); }
+	inline glm::vec3 getGlobalPosition() { return m_globalPosition; }
+	inline glm::vec3 getGlobalScale() { return m_globalScale; }
+	inline glm::quat getGlobalOrientation() { return m_globalOrientation; }
 
+	void setGlobalPosition(glm::vec3 position);
+	void setGlobalScale(glm::vec3 scale);
+	void setGlobalOrientation(glm::quat orientation);
+
+	inline void addChild(Node child) { m_children.push_back(child); }
+	inline void setParent(Node* parent) { m_parent = parent; }
+	inline void removeAt(int index) {
+		m_children.erase(m_children.begin() + index);
+	}
+
+	~Node() {}
 };

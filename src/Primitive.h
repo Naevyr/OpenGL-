@@ -1,17 +1,14 @@
 #pragma once
-#include "VertexArray.h"
+#include "Material.h"
 #include "Node.h"
+#include "VertexArray.h"
 
+class Primitive : public Node {
+private:
+	VertexArray m_vertexArray;
+	MaterialHandle m_material;
 
-class Primitive : public Node
-{
-    private:
-        VertexArray m_vertexArray;
-        unsigned int m_materialIndex;
-        
-    public:
-
-
-        Primitive(VertexArray vertexArray, unsigned int materialIndex);
-        inline unsigned int getMaterialIndex() { return m_materialIndex; }
+public:
+	Primitive(VertexArray vertexArray, unsigned int materialIndex);
+	inline MaterialHandle getMaterialIndex() { return m_material; }
 };

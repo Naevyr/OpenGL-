@@ -1,77 +1,55 @@
 #pragma once
 
-
-
-#include "Material.h"
-#include "Scene.h"
-#include "postprocessing/HDRBloom.h"
-
-#include "scene/SceneDescription.h"
 #include <memory>
 #include <optional>
+
+#include "Material.h"
+#include "ResourceManager.h"
+#include "Scene.h"
+#include "postprocessing/HDRBloom.h"
+#include "scene/SceneDescription.h"
 
 class Pipeline;
 
 class Renderer {
+public:
+	enum class RenderFeatures;
 
-    public:
-        enum class RenderFeatures;
+private:
+	std::unique_ptr<Pipeline> m_pipeline;
+	std::shared_ptr<ResourceManager> m_TextureManager;
 
+	std::optional<Scene> m_currentScene;
 
-    private: 
-        
-        std::unique_ptr<Pipeline> m_pipeline;
-        std::shared_ptr<TextureAllocator> m_textureAllocator;
+	TextureHandle m_framebufferColor;
+	TextureHandle m_framebufferDepth;
+	TextureHandle m_temporaryBuffer;
 
-        std::optional<Scene> m_currentScene;
+	HDRBloom m_bloom;
 
+	glm::mat4 m_projection, m_view;
 
-        TextureHandle m_framebufferColor;
-        TextureHandle m_framebufferDepth;
-        TextureHandle m_temporaryBuffer;
+	int m_width, m_height;
 
-        
+	unsigned int m_mainPassFBO;
 
-        HDRBloom m_bloom;
+	static unsigned int s_quadVAO;
+	static MaterialHandle s_quadMaterial;
 
+public:
+	Renderer(int width, int height);
 
-        
-        glm::mat4 m_projection, m_view;
+	Scene& loadScene(SceneDescription& scene);
 
+	void setResolution(int width, int height);
+	void render();
 
-        int m_width, m_height;
-
-
-        unsigned int m_mainPassFBO;
-
-
-        static unsigned int s_quadVAO;
-        static Material s_quadMaterial;
-
-
-    public:
-
-    
-        Renderer(int width, int height);
-        
-
-        
-        Scene& loadScene(SceneDescription& scene);
-
-
-        void setResolution(int width, int height);
-        
-
-
-        void render();
-        static void DrawQuad(Texture& texture);
+	static void DrawQuad(Texture& texture);
 };
 
-
 enum class Renderer::RenderFeatures {
-    LIGHTING = 1 << 0,
-    SHADOWS = 1 << 1,
-    SKYBOX = 1 << 2,
-    BLOOM = 1 << 3,
-
+	LIGHTING = 1 << 0,
+	SHADOWS = 1 << 1,
+	SKYBOX = 1 << 2,
+	BLOOM = 1 << 3,
 };

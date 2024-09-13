@@ -1,34 +1,39 @@
 #pragma once
+#include <filesystem>
 #include <glm/glm.hpp>
+#include <string>
+
 #include "Texture.h"
-#include <unordered_map>
-struct TextureBinding {
-    std::string name;
-    unsigned int unit;
-    unsigned int textureID;
-    unsigned int type;
-    inline TextureBinding() {}
-    inline TextureBinding(std::string name, unsigned int unit, unsigned int textureID, unsigned int type) : name(name), unit(unit), textureID(textureID), type(type) {}
-};
+#include "glm/fwd.hpp"
 
 class Program {
-    private: 
+public:
+	class STANDARD {
+	public:
+		inline static const std::filesystem::path VERTEX =
+			"resources/shaders/standard.vert";
 
-       std::unordered_map<std::string,TextureBinding> m_textureUnits;
+		inline static const std::filesystem::path FRAGMENT =
+			"resources/shaders/fragment.vert";
+	};
 
+protected:
+	unsigned int m_programID;
 
-    protected:
-        unsigned int m_programID;
+public:
+	Program(std::filesystem::path vertex, std::filesystem::path fragment);
+	Program(std::filesystem::path compute);
+	~Program();
 
-    public:
-        ~Program();
+	void bind();
 
+	void setUniform(std::string name, glm::mat4 value);
+	void setUniform(std::string name, glm::vec4 value);
+	void setUniform(std::string name, glm::vec3 value);
+	void setUniform(std::string name, glm::vec2 value);
+	void setUniform(std::string name, float value);
+	void setUniform(std::string name, int value);
+	void setUniform(std::string name, Texture& value);
 
-        void Initialize();
-        void Bind();
-        void BindBlock(std::string name, unsigned int index);
-        template <typename T>
-        void SetUniform(std::string name, T value);
-
+	void setUBO(std::string name, unsigned int UBO);
 };
-

@@ -1,15 +1,12 @@
 #pragma once
 
 #include "Texture.h"
-#include "TextureAllocator.h"
+#include "TextureManager.h"
 
 class PostProcessingEffect {
+protected:
+	PostProcessingEffect();
 
-    protected:
-        PostProcessingEffect();
-
-    public:
-        virtual void run(Texture& input, Texture& output) = 0;
-
+public:
+	virtual void run(Texture& input, Texture& output) = 0;
 };
-

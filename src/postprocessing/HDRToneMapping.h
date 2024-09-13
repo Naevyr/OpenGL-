@@ -1,17 +1,13 @@
 #pragma once
 
-#include "SinglePassPostProcessingEffect.h"
 #include "Material.h"
-#include "TextureAllocator.h"
+#include "SinglePassPostProcessingEffect.h"
 
-class HDRToneMapping :  public SinglePassPostProcessingEffect<Material> {
-    private: 
-        
+class HDRToneMapping : public SinglePassPostProcessingEffect<Material> {
+private:
+public:
+	HDRToneMapping() {}
+	HDRToneMapping(std::string shaderPath);
 
-    public: 
-
-        HDRToneMapping() {}
-        HDRToneMapping(std::string shaderPath);
-
-        void run(Texture& input, Texture& output) override;
+	void run(Texture& input, Texture& output) override;
 };

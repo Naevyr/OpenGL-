@@ -1,28 +1,33 @@
 #pragma once
 
-#include "Program.h"
-#include "Texture.h"
-
 #include <glad/glad.h>
 
+#include "Program.h"
+#include "TextureManager.h"
 
-#include <unordered_map>
-#include <string>
-#include <vector>
-#include <algorithm>
+struct Material {
+	ProgramHandle program;
 
-typedef unsigned int MaterialHandle;
-
-class Material : public Program {
-   
-
-    protected:
-        void BindProgram();
-    public:
-        inline Material() {}
-        Material(std::string vertexPath, std::string fragmentPath);
-
-        inline unsigned int getProgram() { return m_programID; }
-
+	virtual void bindUniforms(Program& program, TextureManager& allocator) = 0;
 };
 
+struct StandardMaterial : public Material {
+	TextureHandle albedo;
+	TextureHandle normal;
+	TextureHandle roughness;
+	TextureHandle specular;
+	TextureHandle metallic;
+	TextureHandle emission;
+	TextureHandle displacement;
+	TextureHandle opacity;
+
+	UBOHandle meshTransformation;
+	UBOHandle lightingData;
+
+	void bindUniforms(Program& program, TextureManager& allocator) override;
+};
+
+struct ShadowMapMaterial : public Material {
+	UBOHandle lightTransformation;
+	void bindUniforms(Program& program, TextureManager& allocator) override;
+};

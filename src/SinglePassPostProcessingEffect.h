@@ -2,27 +2,18 @@
 
 #include "PostProcessingEffect.h"
 #include "Texture.h"
-#include "TextureAllocator.h"
-#include <memory>
-
+#include "TextureManager.h"
 
 template <class T>
 class SinglePassPostProcessingEffect : public PostProcessingEffect {
+protected:
+	T m_program;
 
-    protected: 
-        T m_program;
-       
+public:
+	inline SinglePassPostProcessingEffect() {}
+	SinglePassPostProcessingEffect(std::string shaderPath);
 
-        
-    public:
-        inline SinglePassPostProcessingEffect(){}
-        SinglePassPostProcessingEffect(std::string shaderPath);
-        
-        
-        void run(Texture& input, Texture& output);
+	void run(Texture& input, Texture& output);
 };
 
-
-
 #include "SinglePassPostProcessingEffect.inl"
-

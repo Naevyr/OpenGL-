@@ -1,12 +1,10 @@
 #pragma once
-#include <string>
-#include "MaterialDescription.h"
 #include <optional>
+#include <string>
 
+#include "MaterialDescription.h"
 
 struct MeshDescription {
-
-    std::string filePath;
-    std::optional<MaterialDescription> material;
-
+	std::string filePath;
+	std::optional<MaterialDescription> material;
 };
