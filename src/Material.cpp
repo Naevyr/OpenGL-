@@ -3,24 +3,11 @@
 #include "Program.h"
 #include "TextureManager.h"
 
-void StandardMaterial::bindUniforms(
-	Program& program, TextureManager& TextureManager
-) {
-	program.setUniform("u_albedo", TextureManager.getTexture(albedo));
-	program.setUniform("u_normal", TextureManager.getTexture(normal));
-	program.setUniform("u_roughness", TextureManager.getTexture(roughness));
-	program.setUniform("u_specular", TextureManager.getTexture(specular));
-	program.setUniform("u_metallic", TextureManager.getTexture(metallic));
-	program.setUniform("u_emission", TextureManager.getTexture(emission));
-	program.setUniform(
-		"u_displacement", TextureManager.getTexture(displacement)
-	);
+void Material::bindUniforms(Program& program, TextureManager& TextureManager) {
+	for (auto texture : textures)
+		program.setUniform(
+			texture.first, TextureManager.getTexture(texture.second)
+		);
 
-	program.setUBO("u_MVP", meshTransformation);
-}
-
-void ShadowMapMaterial::bindUniforms(
-	Program& program, TextureManager& TextureManager
-) {
-	program.setUBO("u_MVP", lightTransformation);
+	for (auto ubo : ubos) program.setUBO(ubo.first, ubo.second);
 }

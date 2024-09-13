@@ -21,5 +21,3 @@ struct StandardMaterialDescription : public MaterialDescription {
 
 	bool trasparency;
 };
-
-struct ShadowMapMaterialDescription : public MaterialDescription {};

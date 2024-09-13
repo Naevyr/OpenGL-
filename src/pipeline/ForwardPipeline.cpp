@@ -27,16 +27,6 @@ ForwardPipeline::ForwardPipeline(std::shared_ptr<TextureManager> TextureManager)
 		GL_UNIFORM_BUFFER, sizeof(Light::Uniform), nullptr, GL_DYNAMIC_DRAW
 	);
 
-	TextureManager::RuntimeTextureSpecification shadowMapSpecs;
-	shadowMapSpecs.width = 256;
-	shadowMapSpecs.height = 256;
-	shadowMapSpecs.format = GL_DEPTH_COMPONENT;
-	shadowMapSpecs.internal_format = GL_DEPTH_COMPONENT24;
-	shadowMapSpecs.encoding = GL_FLOAT;
-	shadowMapSpecs.type = GL_TEXTURE_2D_ARRAY;
-	shadowMapSpecs.depth = 20;
-	m_shadowMap = m_TextureManager->createTexture(shadowMapSpecs);
-
 	m_shadowMaterial = Material(
 		"resources/shaders/shadow.vert", "resources/shaders/shadow.frag"
 	);
@@ -105,14 +95,7 @@ void ForwardPipeline::SetLightUniform(
 			u_Lights.lights[i] = lights[i];
 		}
 
-		glBindBuffer(GL_UNIFORM_BUFFER, m_LightUBO);
-
-		GLuint bindingPoint = 3;
-		glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_LightUBO);
-
-		glBufferData(
-			GL_UNIFORM_BUFFER, sizeof(LightUniform), &u_Lights, GL_DYNAMIC_DRAW
-		);
+		;
 
 		material.BindBlock("u_Lights", bindingPoint);
 		material.SetUniform<glm::vec4>(

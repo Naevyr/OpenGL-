@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Material.h"
 #include "Program.h"
 #include "ResourceTypes.h"
@@ -42,6 +44,8 @@ public:
 
 	void registerUbo();
 
-	MaterialHandle registerMaterial(StandardMaterialDescription desc);
-	MaterialHandle registerMaterial(ShadowMapMaterialDescription desc);
+	MaterialHandle registerMaterial(Material material);
+
+	template <typename T>
+	MaterialHandle registerUBO(T ubo);
 };

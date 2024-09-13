@@ -13,6 +13,8 @@ public:
 	struct RenderSpecifications;
 
 private:
+	struct LightUBO;
+
 	unsigned int m_ShadowFB;
 	TextureHandle m_shadowMap;
 	MaterialHandle m_shadowMapMaterial;
@@ -34,3 +36,4 @@ struct Pipeline::RenderSpecifications {
 	TextureHandle colorTexture;
 	TextureHandle depthTexture;
 };
+

@@ -5,11 +5,30 @@
 
 #include "Material.h"
 #include "Pipeline.h"
+#include "ResourceTypes.h"
 #include "glad/glad.h"
+#include "scene/MaterialDescription.h"
 
 Pipeline::Pipeline(std::shared_ptr<ResourceManager> resourceManager) :
 	m_resourceManager(resourceManager) {
-	m_resourceManager->registerMaterial(ShadowMapMaterial & desc)
+	TextureManager::RuntimeTextureSpecification shadowMapSpecs;
+	shadowMapSpecs.width = 256;
+	shadowMapSpecs.height = 256;
+	shadowMapSpecs.format = GL_DEPTH_COMPONENT;
+	shadowMapSpecs.internal_format = GL_DEPTH_COMPONENT24;
+	shadowMapSpecs.encoding = GL_FLOAT;
+	shadowMapSpecs.type = GL_TEXTURE_2D_ARRAY;
+	shadowMapSpecs.depth = 20;
+	m_shadowMap =
+		m_resourceManager->getTextureManager().createTexture(shadowMapSpecs);
+
+	Light::Uniform lightUniform;
+	UBOHandle uboHandle = m_resourceManager->registerUBO(lightUniform);
+	Material shadowmapMaterial =
+		Material::ShadowmapMaterial(uboHandle, m_shadowMap);
+
+	m_shadowMapMaterial =
+		m_resourceManager->registerMaterial(shadowmapMaterial);
 }
 
 void Pipeline::renderShadowMap(Scene& scene) {
