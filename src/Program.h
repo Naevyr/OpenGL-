@@ -25,9 +25,9 @@ public:
 	Program(std::filesystem::path compute);
 	~Program();
 
-	void bind();
+	void bind() const;
 
-	void setUniform(std::string name, glm::mat4 value);
+	void setUniform(std::string name, glm::mat4 value) const;
 	void setUniform(std::string name, glm::vec4 value);
 	void setUniform(std::string name, glm::vec3 value);
 	void setUniform(std::string name, glm::vec2 value);

@@ -8,7 +8,6 @@
 #include "ResourceTypes.h"
 #include "Texture.h"
 
-
 class TextureManager {
 public:
 	struct TextureSpecification;
@@ -39,8 +38,11 @@ public:
 
 	TextureHandle createTexture(RuntimeTextureSpecification& specs);
 
-	inline Texture& getTexture(TextureHandle handle) {
-		return m_textures[handle];
+	inline const Texture& getTexture(TextureHandle handle) const {
+		auto iter = m_textures.find(handle);
+		if (iter == m_textures.end())
+			throw "Texture not found for handle :" + std::to_string(handle);
+		return iter->second;
 	}
 
 	void releaseTexture(TextureHandle handle);

@@ -42,10 +42,10 @@ protected:
 public:
 	inline TextureManager& getTextureManager() { return m_textureManager; }
 
-	void registerUbo();
-
 	MaterialHandle registerMaterial(Material material);
 
 	template <typename T>
 	MaterialHandle registerUBO(T ubo);
+
+	inline unsigned int getUBO(UBOHandle handle) { return m_ubos[handle]; }
 };

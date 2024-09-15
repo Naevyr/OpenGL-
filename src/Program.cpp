@@ -143,7 +143,7 @@ Program::Program(std::filesystem::path compute) {
 
 Program::~Program() { glDeleteProgram(m_programID); }
 
-void Program::bind() {
+void Program::bind() const {
 	GLint currentProgram = 0;
 	glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
 
@@ -159,7 +159,7 @@ void Program::setUBO(std::string name, unsigned int id) {
 	);
 }
 
-void Program::setUniform(std::string name, glm::mat4 value) {
+void Program::setUniform(std::string name, glm::mat4 value) const {
 	bind();
 	unsigned int location = glGetUniformLocation(m_programID, name.c_str());
 	glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
