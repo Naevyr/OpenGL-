@@ -4,21 +4,21 @@
 
 #include <string>
 
-ComputeShader::ComputeShader(std::string path) {}
+#include "Program.h"
 
-void ComputeShader::Dispatch(glm::ivec3 groupCount) {
+void ComputeShader::dispatch(glm::ivec3 groupCount) {
 	bind();
 	glDispatchCompute(groupCount.x, groupCount.y, groupCount.z);
 	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
-void SetUniform(
+void setUniform(
 	std::string name,
 	Texture& texture,
-	unsigned int usage,
+	GLenum usage = GL_READ_WRITE,
 	unsigned int mipmap = 0
 ) {
 	GLuint64 imageHandle =
 		glGetImageHandleARB(texture.getID(), mipmap, GL_FALSE, 0, usage);
-	glMakeImageHandleResidentARB(imageHandle, GL_READ_ONLY);
+	glMakeImageHandleResidentARB(imageHandle, usage);
 }

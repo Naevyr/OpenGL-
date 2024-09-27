@@ -1,10 +1,10 @@
 #pragma once
-
+// clang-format off
+#include "Renderer.h"
 #include <GLFW/glfw3.h>
+// clang-format on
 
 #include <memory>
-
-#include "Renderer.h"
 
 class Application {
 private:

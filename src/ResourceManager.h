@@ -8,18 +8,14 @@
 #include "TextureManager.h"
 #include "VertexBuffer.h"
 
-struct UBO {};
-
-struct StandardMaterialUBO : public UBO {
-	unsigned int albedo;
-};
-
-struct VP_UBO : public UBO {
-	glm::mat4 u_view;
-	glm::mat4 u_projection;
-};
-
 class ResourceManager {
+public:
+	enum class DefaultUBOType {
+		ViewProjection,
+		Lights,
+	};
+	class UBOs;
+
 private:
 	TextureManager m_textureManager;
 
@@ -32,6 +28,7 @@ private:
 	std::map<MaterialHandle, Material> m_materials;
 	std::map<ProgramHandle, Program> m_programs;
 	std::map<UBOHandle, unsigned int> m_ubos;
+	std::map<DefaultUBOType, UBOHandle> m_uboTypes;
 
 	std::map<std::filesystem::path, ProgramHandle> m_programCache;
 
@@ -51,13 +48,17 @@ public:
 	ProgramHandle registerProgram(
 		const std::filesystem::path vertex, const std::filesystem::path fragment
 	);
-	inline ProgramHandle getDefaultProgramHandle();
+	inline ProgramHandle getDefaultProgramHandle() { return m_defaultProgram; }
 	inline Program& getProgram(ProgramHandle handle) {
 		return m_programs[handle];
 	}
 
 	template <typename T>
 	UBOHandle registerUBO(T ubo);
+
+	inline UBOHandle getDefaultUBO(DefaultUBOType type) {
+		return m_uboTypes[type];
+	}
 
 	inline unsigned int getUBO(UBOHandle handle) { return m_ubos[handle]; }
 

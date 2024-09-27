@@ -23,8 +23,9 @@ protected:
 	glm::quat m_orientation = glm::quat();
 
 public:
-	Node(NodeID nodeID) : m_nodeID(nodeID) {}
-	Node(NodeID nodeID, NodeID parent) : m_nodeID(nodeID), m_parent(parent) {}
+	Node(NodeID nodeID, NodeID parent = 0) :
+		m_nodeID(nodeID),
+		m_parent(parent == 0 ? std::nullopt : std::optional<NodeID>(parent)) {}
 
 	inline glm::vec3 getPosition() { return m_position; }
 	inline glm::vec3 getScale() { return m_scale; }
@@ -45,7 +46,7 @@ public:
 	inline const std::vector<NodeID>& getChildren() const {
 		return m_children;
 	};
-	NodeID getParent();
+	std::optional<NodeID> getParent();
 
 	~Node() {}
 };

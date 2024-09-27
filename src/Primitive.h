@@ -5,6 +5,12 @@
 #include "VertexArray.h"
 
 class Primitive : public Node {
+public:
+	struct ViewProjectionUniformBuffer {
+		glm::mat4 u_view;
+		glm::mat4 u_projection;
+	};
+
 private:
 	VertexArray m_vertexArray;
 	MaterialHandle m_material;

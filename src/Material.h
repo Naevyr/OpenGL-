@@ -2,11 +2,11 @@
 
 #include <glad/glad.h>
 
+#include <map>
+#include <string>
 #include <variant>
 
-#include "Program.h"
 #include "ResourceTypes.h"
-#include "TextureManager.h"
 #include "glm/ext/matrix_float3x3.hpp"
 
 template <typename T>
@@ -30,7 +30,8 @@ public:
 		TextureHandle roughness,
 		TextureHandle specular,
 		TextureHandle metallic,
-		TextureHandle emission
+		TextureHandle emission,
+		UBOHandle projectionView
 	);
 
 	static Material ShadowmapMaterial(

@@ -3,10 +3,11 @@
 #include <filesystem>
 #include <memory>
 
+#include "Light.h"
 #include "Material.h"
+#include "Primitive.h"
 #include "Program.h"
 #include "ResourceTypes.h"
-#include "TextureManager.h"
 #include "glad/glad.h"
 
 ResourceManager::ResourceManager() {
@@ -14,6 +15,16 @@ ResourceManager::ResourceManager() {
 		Program::DefaultPrograms::STANDARD_FORWARD::VERTEX,
 		Program::DefaultPrograms::STANDARD_FORWARD::FRAGMENT
 	);
+
+	UBOHandle handle;
+
+	Light::UniformBuffer lightUBO;
+	handle = registerUBO(lightUBO);
+	m_uboTypes[DefaultUBOType::Lights] = handle;
+
+	Primitive::ViewProjectionUniformBuffer vpUBO;
+	handle = registerUBO(vpUBO);
+	m_uboTypes[DefaultUBOType::ViewProjection] = handle;
 };
 
 MaterialHandle ResourceManager::registerMaterial(Material material) {

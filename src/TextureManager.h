@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <map>
 #include <optional>
+#include <vector>
 
 #include "ResourceTypes.h"
 #include "Texture.h"

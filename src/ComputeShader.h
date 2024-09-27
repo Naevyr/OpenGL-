@@ -8,13 +8,17 @@
 
 class ComputeShader : public Program {
 public:
-	ComputeShader(std::string path);
-	void Dispatch(glm::ivec3 axis);
+	inline ComputeShader(std::filesystem::path path) : Program(path) {}
+	void dispatch(glm::ivec3 axis);
 
-	void SetTexture(
+	using Program::setUniform;
+	void setUniform(
 		std::string name,
 		Texture& texture,
-		unsigned int usage,
+		GLenum usage,
 		unsigned int mipmap = 0
 	);
+	inline void setUniform(std::string name, Texture& texture) {
+		setUniform(name, texture, GL_READ_ONLY, 0);
+	}
 };

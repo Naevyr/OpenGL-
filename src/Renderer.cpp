@@ -3,8 +3,9 @@
 
 #include <memory>
 
+#include "Program.h"
+#include "ResourceManager.h"
 #include "TextureManager.h"
-#include "pipeline/ForwardPipeline.h"
 #include "pipeline/Pipeline.h"
 #include "postprocessing/HDRBloom.h"
 #include "scene/SceneDescription.h"
@@ -23,11 +24,11 @@ Renderer::Renderer(int width, int height) {
 	glDepthFunc(GL_LESS);
 	glDepthMask(GL_TRUE);
 
-	m_resourceManager = std::make_shared<TextureManager>();
+	m_resourceManager = std::make_shared<ResourceManager>();
 
-	m_pipeline = std::make_unique<ForwardPipeline>(m_resourceManager);
+	m_pipeline = std::make_unique<Pipeline>(m_resourceManager);
 
-	m_bloom = HDRBloom(m_resourceManager);
+	m_bloom = std::make_unique<HDRBloom>(m_resourceManager);
 
 	TextureManager::RuntimeTextureSpecification framebufferSpecs;
 	framebufferSpecs.width = width;
@@ -36,8 +37,9 @@ Renderer::Renderer(int width, int height) {
 	framebufferSpecs.encoding = GL_FLOAT;
 	framebufferSpecs.resolution_group = 0;
 
-	m_framebufferColor = m_resourceManager->createTexture(framebufferSpecs);
-	m_temporaryBuffer = m_resourceManager->createTexture(framebufferSpecs);
+	TextureManager& textureManager = m_resourceManager->getTextureManager();
+	m_framebufferColor = textureManager.createTexture(framebufferSpecs);
+	m_temporaryBuffer = textureManager.createTexture(framebufferSpecs);
 
 	TextureManager::RuntimeTextureSpecification depth_specs;
 
@@ -49,7 +51,7 @@ Renderer::Renderer(int width, int height) {
 	depth_specs.internal_format = GL_DEPTH_COMPONENT;
 	depth_specs.resolution_group = 0;
 
-	m_framebufferDepth = m_resourceManager->createTexture(depth_specs);
+	m_framebufferDepth = textureManager.createTexture(depth_specs);
 
 	glGenFramebuffers(1, &m_mainPassFBO);
 }
@@ -60,9 +62,10 @@ Scene& Renderer::loadScene(SceneDescription& description) {
 };
 
 void Renderer::render() {
-	Texture& fbColor = m_resourceManager->getTexture(m_framebufferColor);
-	Texture& fbDepth = m_resourceManager->getTexture(m_framebufferDepth);
-	Texture& tmp = m_resourceManager->getTexture(m_temporaryBuffer);
+	TextureManager& textureManager = m_resourceManager->getTextureManager();
+	Texture& fbColor = textureManager.getTexture(m_framebufferColor);
+	Texture& fbDepth = textureManager.getTexture(m_framebufferDepth);
+	Texture& tmp = textureManager.getTexture(m_temporaryBuffer);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_mainPassFBO);
 	glFramebufferTexture(
@@ -81,8 +84,6 @@ void Renderer::render() {
 
 	Pipeline::RenderSpecifications specs = {
 		.scene = m_currentScene.value(),
-		.projection = m_projection,
-		.view = m_view,
 		.colorTexture = m_framebufferColor,
 		.depthTexture = m_framebufferDepth,
 	};
@@ -98,7 +99,9 @@ void Renderer::render() {
 		GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, fbDepth.getID(), 0
 	);
 
-	Renderer::DrawQuad(m_resourceManager->getTexture(m_framebufferColor));
+	Renderer::DrawQuad(
+		m_resourceManager->getTextureManager().getTexture(m_framebufferColor)
+	);
 }
 
 void Renderer::setResolution(int width, int height) {
@@ -108,12 +111,12 @@ void Renderer::setResolution(int width, int height) {
 		glm::radians(45.0f), (float)width / height, 0.1f, 1000.0f
 	);
 
-	m_TextureManager->updateResolution(0, width, height);
+	m_resourceManager->getTextureManager().updateResolution(0, width, height);
 }
 
 void Renderer::DrawQuad(Texture& texture) {
 	if (s_quadVAO == 0) {
-		s_quadMaterial = Material(
+		s_quadMaterial = Program(
 			"resources/shaders/quad.vert", "resources/shaders/quad.frag"
 		);
 		glGenVertexArrays(1, &s_quadVAO);
@@ -121,7 +124,7 @@ void Renderer::DrawQuad(Texture& texture) {
 
 	glDisable(GL_DEPTH_TEST);
 	glBindVertexArray(s_quadVAO);
-	s_quadMaterial.SetUniform<Texture&>("u_Texture", texture);
+	s_quadMaterial.setUniform("u_Texture", texture);
 	s_quadMaterial.bind();
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 }

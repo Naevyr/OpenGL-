@@ -10,7 +10,8 @@ public:
 		DIRECTIONAL = 1,
 		SPOT = 2
 	};
-	struct Uniform;
+	struct SingleLight;
+	struct UniformBuffer;
 
 private:
 	friend class LightComponent;
@@ -28,10 +29,10 @@ public:
 	void setType(Type type);
 	Type getType();
 
-	Light::Uniform getUniformStruct();
+	Light::SingleLight getUniformStruct();
 };
 
-struct Light::Uniform {
+struct Light::SingleLight {
 	glm::mat4 lightSpaceMatrix;
 	glm::vec3 position;
 	float _padding1;
@@ -44,8 +45,8 @@ struct Light::Uniform {
 
 	int _padding3[3];
 };
-struct LightUniformBuffer {
+struct Light::UniformBuffer {
 	unsigned int count;
 	int padding[3];
-	Light lights[20];
+	Light::SingleLight lights[20];
 };

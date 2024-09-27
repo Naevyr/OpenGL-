@@ -25,7 +25,7 @@ private:
 	TextureHandle m_framebufferDepth;
 	TextureHandle m_temporaryBuffer;
 
-	HDRBloom m_bloom;
+	std::unique_ptr<HDRBloom> m_bloom;
 
 	glm::mat4 m_projection, m_view;
 
@@ -34,7 +34,7 @@ private:
 	unsigned int m_mainPassFBO;
 
 	static unsigned int s_quadVAO;
-	static MaterialHandle s_quadMaterial;
+	static Program s_quadMaterial;
 
 public:
 	Renderer(int width, int height);

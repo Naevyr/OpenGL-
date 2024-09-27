@@ -187,7 +187,9 @@ NodeID Scene::loadMesh(
 		};
 		VertexArray vao = VertexArray(specs);
 
-		m_nodes[primitiveID] = std::make_unique<Primitive>(vao, );
+		m_nodes[primitiveID] = std::make_unique<Primitive>(
+			vao, materialCache[basePrimitive.material], primitiveID, id
+		);
 	}
 }
 
@@ -197,17 +199,18 @@ std::unordered_map<unsigned int, TextureHandle> Scene::loadTextures(
 	std::unordered_map<unsigned int, TextureHandle> textureCache;
 	textureCache.reserve(data.images.size());
 
-	for (int i = 0; i < data.images.size(); i++) {
-		tinygltf::Image& baseTexture = data.images[i];
+	for (int i = 0; i < data.textures.size(); i++) {
+		tinygltf::Texture texture = data.textures[i];
+		tinygltf::Image& image = data.images[texture.source];
 
 		TextureManager::RuntimeTextureSpecification specs = {
-			.height = baseTexture.height,
-			.width = baseTexture.width,
-			.data = baseTexture.image,
+			.height = image.height,
+			.width = image.width,
+			.data = image.image,
 		};
 		GLenum format;
 
-		switch (baseTexture.component) {
+		switch (image.component) {
 			case 1:
 				format = GL_RED;
 				break;
@@ -226,7 +229,7 @@ std::unordered_map<unsigned int, TextureHandle> Scene::loadTextures(
 		specs.internal_format = format;
 		specs.format = format;
 		specs.encoding =
-			baseTexture.pixel_type == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE
+			image.pixel_type == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE
 				? GL_UNSIGNED_BYTE
 				: GL_UNSIGNED_SHORT;
 
@@ -251,20 +254,21 @@ std::unordered_map<unsigned int, MaterialHandle> Scene::loadMaterials(
 	for (int i = 0; i < data.materials.size(); i++) {
 		tinygltf::Material baseMaterial = data.materials[i];
 
-		Material material = Material::StandardMaterial(
-			defaultProgram,
-			baseMaterial.pbrMetallicRoughness.baseColorTexture,
-			baseMaterial.normalTexture,
-			baseMaterial.pbrMetallicRoughness.metallicRoughnessTexture,
-			0,
-			0,
-			baseMaterial.emissiveTexture,
-			0,
-			0,
-			UBOHandle meshTransformation,
-			UBOHandle lightingData
+		UBOHandle viewProjection = resourceManager.getDefaultUBO(
+			ResourceManager::DefaultUBOType::ViewProjection
 		);
 
+		Material material = Material::StandardMaterial(
+			defaultProgram,
+			textures[baseMaterial.pbrMetallicRoughness.baseColorTexture.index],
+			textures[baseMaterial.normalTexture.index],
+			textures[baseMaterial.pbrMetallicRoughness.metallicRoughnessTexture
+		                 .index],
+			0,
+			0,
+			textures[baseMaterial.emissiveTexture.index],
+			viewProjection
+		);
 		MaterialHandle handle = resourceManager.registerMaterial(material);
 		materialCache[i] = handle;
 	}

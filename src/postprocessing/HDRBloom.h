@@ -4,28 +4,27 @@
 
 #include "ComputeShader.h"
 #include "PostProcessingEffect.h"
-#include "SinglePassPostProcessingEffect.h"
+#include "ResourceManager.h"
+#include "SinglePassComputeEffect.h"
 #include "Texture.h"
-#include "TextureManager.h"
 
 class HDRBloom : public PostProcessingEffect {
 private:
-	SinglePassPostProcessingEffect<ComputeShader> m_brightPass;
+	SinglePassComputeEffect m_brightPass;
 
-	ComputeShader m_blur;
-	ComputeShader m_downSample;
-	ComputeShader m_upSample;
-	ComputeShader m_add;
+	std::unique_ptr<ComputeShader> m_blur;
+	std::unique_ptr<ComputeShader> m_downSample;
+	std::unique_ptr<ComputeShader> m_upSample;
+	std::unique_ptr<ComputeShader> m_add;
 
 	TextureHandle m_workTexture;
 	TextureHandle m_temporary;
-	std::shared_ptr<TextureManager> m_TextureManager;
+	std::shared_ptr<ResourceManager> m_resourceManager;
 
 	float m_bloomThreshold;
 
 public:
-	inline HDRBloom() {}
-	HDRBloom(std::shared_ptr<TextureManager> TextureManager);
+	HDRBloom(std::shared_ptr<ResourceManager> resourceManager);
 
 	void run(Texture& input, Texture& output) override;
 	inline ~HDRBloom() {}

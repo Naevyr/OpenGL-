@@ -5,8 +5,10 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/imgui.h>
 
+#include <filesystem>
 #include <iostream>
 #include <memory>
+#include <optional>
 
 #include "Renderer.h"
 #include "UI/UI.h"
@@ -73,8 +75,7 @@ Application::~Application() { glfwTerminate(); }
 
 void Application::Run() {
 	MaterialDescription texturedMaterialDescription {
-		.albedo = "albedo.png",
-		.normal = "normal.png",
+
 	};
 
 	MeshDescription cube {

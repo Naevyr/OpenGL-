@@ -1,11 +1,14 @@
 #include "Camera.h"
 
+#include "Node.h"
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/quaternion.hpp>
-#include <iostream>
 
-Camera::Camera() { m_position = glm::vec3(0.0f, 0.0f, 0.0f); }
+Camera::Camera(NodeID id, NodeID parent) : Node(id, parent) {
+	m_position = glm::vec3(0.0f, 0.0f, 0.0f);
+}
 
 void Camera::movementInput(glm::vec3 direction, float delta) {
 	glm::vec3 forward = glm::vec4(direction, -1) * getOrientation();

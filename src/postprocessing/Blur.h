@@ -1,13 +1,13 @@
 #pragma once
 #include "ComputeShader.h"
+#include "SinglePassComputeEffect.h"
 #include "SinglePassPostProcessingEffect.h"
 
-class Blur : public SinglePassPostProcessingEffect<ComputeShader> {
+class Blur : public SinglePassComputeEffect {
 private:
 	int m_blurSize;
 
 public:
-	inline Blur() {}
 	Blur(int blurSize);
 
 	void run(Texture& input, Texture& output) override;
