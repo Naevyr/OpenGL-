@@ -9,6 +9,13 @@
 #include "TextureManager.h"
 #include "glad/glad.h"
 
+ResourceManager::ResourceManager() {
+	m_defaultProgram = registerProgram(
+		Program::DefaultPrograms::STANDARD_FORWARD::VERTEX,
+		Program::DefaultPrograms::STANDARD_FORWARD::FRAGMENT
+	);
+};
+
 MaterialHandle ResourceManager::registerMaterial(Material material) {
 	MaterialHandle handle = m_nextMaterialHandle;
 

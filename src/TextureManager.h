@@ -4,6 +4,7 @@
 #include <array>
 #include <filesystem>
 #include <map>
+#include <optional>
 
 #include "ResourceTypes.h"
 #include "Texture.h"
@@ -38,11 +39,8 @@ public:
 
 	TextureHandle createTexture(RuntimeTextureSpecification& specs);
 
-	inline const Texture& getTexture(TextureHandle handle) const {
-		auto iter = m_textures.find(handle);
-		if (iter == m_textures.end())
-			throw "Texture not found for handle :" + std::to_string(handle);
-		return iter->second;
+	inline Texture& getTexture(TextureHandle handle) {
+		return m_textures[handle];
 	}
 
 	void releaseTexture(TextureHandle handle);
@@ -51,14 +49,14 @@ public:
 };
 
 struct TextureManager::TextureSpecification {
-	unsigned int wrapping = GL_CLAMP_TO_EDGE;
-	unsigned int filtering = GL_LINEAR;
+	GLint wrapping = GL_CLAMP_TO_EDGE;
+	GLint filtering = GL_LINEAR;
 
-	unsigned int format = GL_RGBA;
-	unsigned int internal_format = GL_RGBA;
-	unsigned int encoding = GL_FLOAT;
-	unsigned int type = GL_TEXTURE_2D;
-	unsigned int mipmap_levels = 1;
+	GLenum format = GL_RGBA;
+	GLenum internal_format = GL_RGBA;
+	GLenum encoding = GL_FLOAT;
+	GLenum type = GL_TEXTURE_2D;
+	GLint mipmap_levels = 1;
 
 	int target_framebuffer = -1;
 
@@ -67,16 +65,17 @@ struct TextureManager::TextureSpecification {
 
 struct TextureManager::RuntimeTextureSpecification :
 	public TextureManager::TextureSpecification {
-	int width;
-	int height;
-	int depth;
+	GLsizei height;
+	GLsizei width;
+	GLsizei depth;
 	unsigned int resolution_group = 0;
+	std::optional<std::vector<unsigned char>> data;
 };
 
 struct TextureManager::VirtualTextureSpecification :
 	public TextureManager::TextureSpecification {
-	unsigned int id = 0;
-	unsigned int handle = 0;
+	GLuint id = 0;
+	GLuint handle = 0;
 };
 
 template <size_t SIZE>

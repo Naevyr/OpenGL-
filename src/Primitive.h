@@ -1,6 +1,7 @@
 #pragma once
-#include "Material.h"
+#include "AABB.h"
 #include "Node.h"
+#include "ResourceTypes.h"
 #include "VertexArray.h"
 
 class Primitive : public Node {
@@ -9,6 +10,15 @@ private:
 	MaterialHandle m_material;
 
 public:
-	Primitive(VertexArray vertexArray, unsigned int materialIndex);
+	Primitive(
+		VertexArray vertexArray,
+		MaterialHandle materialHandle,
+		NodeID id,
+		NodeID parent
+	) :
+		Node(id, parent),
+		m_vertexArray(vertexArray),
+		m_material(materialHandle) {}
 	inline MaterialHandle getMaterialIndex() { return m_material; }
+	inline VertexArray getVertexArray() { return m_vertexArray; }
 };

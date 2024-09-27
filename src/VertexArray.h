@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <memory>
-#include <vector>
+#include <span>
 
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
@@ -19,13 +19,13 @@ public:
 	};
 	struct Specifications {
 		Type type;
-		std::vector<unsigned char> vertices;
-		std::vector<unsigned int> indices;
+		std::span<unsigned char> vertices;
+		std::span<unsigned char> indices;
 		std::shared_ptr<VertexBuffer> vertexBuffer;
 	};
 
 private:
-	unsigned int m_arrayID;
+	GLuint m_arrayID;
 	unsigned int m_meshID;
 
 	std::shared_ptr<VertexBuffer> m_vertexBuffer;
@@ -34,8 +34,8 @@ private:
 	void StaticMeshDefinition();
 
 public:
-	inline VertexArray() {};
-	VertexArray(Specifications specs);
-	void Bind() const;
-	void Release();
+	VertexArray(Specifications& specs);
+	inline unsigned int getIndexCount() { return m_indexBuffer.getCount(); }
+	void bind() const;
+	void release();
 };

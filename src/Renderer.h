@@ -17,7 +17,7 @@ public:
 
 private:
 	std::unique_ptr<Pipeline> m_pipeline;
-	std::shared_ptr<ResourceManager> m_TextureManager;
+	std::shared_ptr<ResourceManager> m_resourceManager;
 
 	std::optional<Scene> m_currentScene;
 

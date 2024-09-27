@@ -9,65 +9,70 @@
 #include "TextureManager.h"
 #include "glm/ext/matrix_float3x3.hpp"
 
+template <typename T>
+concept UniformHandleValueType =
+	std::same_as<T, TextureHandle> || std::same_as<T, UBOHandle>;
+
+template <typename T>
+concept UniformDataValueType =
+	std::same_as<T, float> || std::same_as<T, int> ||
+	std::same_as<T, glm::vec2> || std::same_as<T, glm::vec3> ||
+	std::same_as<T, glm::vec4> || std::same_as<T, glm::mat3> ||
+	std::same_as<T, glm::mat4>;
+
 class ResourceManager;
 class Material {
 public:
 	static Material StandardMaterial(
 		ProgramHandle program,
-
 		TextureHandle albedo,
 		TextureHandle normal,
 		TextureHandle roughness,
 		TextureHandle specular,
 		TextureHandle metallic,
-		TextureHandle emission,
-		TextureHandle displacement,
-		TextureHandle opacity,
-
-		UBOHandle meshTransformation,
-		UBOHandle lightingData
+		TextureHandle emission
 	);
 
 	static Material ShadowmapMaterial(
-		ProgramHandle program,
-		UBOHandle lightTransformation,
-		TextureHandle shadowMap
+		ProgramHandle program, TextureHandle shadowMap
 	);
 
 private:
 	Material();
 
-	using UniformValue = std::variant<
+	using UniformHandleValue = std::variant<TextureHandle, UBOHandle>;
+
+	using UniformDataValue = std::variant<
 		float,
 		int,
-		TextureHandle,
-		UBOHandle,
 		glm::vec2,
 		glm::vec3,
 		glm::vec4,
 		glm::mat3,
 		glm::mat4>;
 
-	enum class Type {
-		FLOAT,
-		INT,
-		VEC2,
-		VEC3,
-		VEC4,
-		MAT3,
-		MAT4
-	};
-
-	std::map<std::string, UniformValue> m_uniforms;
+	std::map<std::string, UniformHandleValue> m_uniformHandleValues;
+	std::map<std::string, UniformDataValue> m_uniformsDataValues;
+	ProgramHandle m_program;
 
 public:
-	ProgramHandle program;
+	void bindUniforms(ResourceManager& allocator);
 
-	void bindUniforms(Program& program, ResourceManager& allocator);
+	template <UniformDataValueType T>
+	void setUniform(std::string name, T uniform) {
+		m_uniformsDataValues[name] = UniformDataValue(uniform);
+	}
+	template <UniformHandleValueType T>
+	void setUniform(std::string name, T value) {
+		m_uniformHandleValues[name] = UniformHandleValue(value);
+	}
 
-	template <typename T>
-	void setUniform(std::string name, T uniform);
-
-	template <typename T>
-	std::optional<T> getUniform(std::string name);
+	template <UniformDataValueType T>
+	T getUniform(std::string name) {
+		return m_uniformsDataValues[name];
+	}
+	template <UniformHandleValueType T>
+	T getUniform(std::string name) {
+		return m_uniformHandleValues[name];
+	}
 };

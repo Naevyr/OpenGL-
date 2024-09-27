@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <glm/glm.hpp>
 
-VertexArray::VertexArray(Specifications specs) :
+VertexArray::VertexArray(Specifications& specs) :
 	m_vertexBuffer(specs.vertexBuffer) {
 	m_indexBuffer = IndexBuffer(specs.indices);
 	m_meshID = m_vertexBuffer->addMesh(specs.vertices);
@@ -16,12 +16,12 @@ VertexArray::VertexArray(Specifications specs) :
 			break;
 	}
 }
-void VertexArray::Release() {
+void VertexArray::release() {
 	glDeleteVertexArrays(1, &m_arrayID);
 	m_vertexBuffer->removeMesh(m_meshID);
 }
 
-void VertexArray::Bind() const { glBindVertexArray(m_arrayID); }
+void VertexArray::bind() const { glBindVertexArray(m_arrayID); }
 
 void VertexArray::StaticMeshDefinition() {
 	glEnableVertexAttribArray(0);

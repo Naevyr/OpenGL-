@@ -31,7 +31,7 @@ TextureHandle TextureManager::createTexture(RuntimeTextureSpecification& specs
 			0,
 			specs.format,
 			specs.encoding,
-			nullptr
+			specs.data.has_value() ? specs.data->data() : nullptr
 		);
 
 	else
@@ -44,7 +44,7 @@ TextureHandle TextureManager::createTexture(RuntimeTextureSpecification& specs
 			0,
 			specs.format,
 			specs.encoding,
-			nullptr
+			specs.data.has_value() ? specs.data->data() : nullptr
 		);
 
 	glTexParameteri(specs.type, GL_TEXTURE_WRAP_S, specs.wrapping);
@@ -87,8 +87,6 @@ TextureHandle TextureManager::createTexture(VirtualTextureSpecification& specs
 	texture.m_textureType = specs.type;
 
 	texture.m_format = specs.internal_format;
-
-	TextureHandle handle = m_textures.size();
 
 	if (specs.override == 0) {
 		m_nextHandle++;

@@ -1,11 +1,13 @@
 #pragma once
 
 #include <map>
-#include <vector>
+#include <span>
+
+#include "glad/glad.h"
 
 class VertexBuffer {
 private:
-	unsigned int m_glID;
+	GLuint m_glID;
 	unsigned int m_instancedMeshes;
 	bool m_isStatic;
 
@@ -19,7 +21,7 @@ public:
 	VertexBuffer();
 	void Bind() const;
 
-	unsigned int addMesh(std::vector<unsigned char>& data);
+	unsigned int addMesh(std::span<unsigned char> data);
 	void removeMesh(unsigned int m_meshID);
 
 	void setUsage(bool staticBuffer);

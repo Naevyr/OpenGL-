@@ -13,7 +13,7 @@ VertexBuffer::VertexBuffer() {
 
 void VertexBuffer::Bind() const { glBindBuffer(GL_ARRAY_BUFFER, m_glID); }
 
-unsigned int VertexBuffer::addMesh(std::vector<unsigned char>& data) {
+unsigned int VertexBuffer::addMesh(std::span<unsigned char> data) {
 	assert(!m_isStatic);
 
 	glBufferSubData(

@@ -1,15 +1,18 @@
 #pragma once
 
-#include <vector>
+#include <span>
+
+#include "glad/glad.h"
+
 
 class IndexBuffer {
 private:
-	unsigned int m_glID;
+	GLuint m_glID;
 	unsigned int m_count;
 
 public:
 	inline IndexBuffer() {}
-	IndexBuffer(std::vector<unsigned int> data);
-	void Bind();
+	IndexBuffer(std::span<unsigned char> data);
+	void bind();
 	inline unsigned int getCount() const { return m_count; }
 };

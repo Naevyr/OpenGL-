@@ -159,12 +159,16 @@ void Program::setUBO(std::string name, unsigned int id) {
 	);
 }
 
-void Program::setUniform(std::string name, glm::mat4 value) const {
+void Program::setUniform(std::string name, glm::mat4 value) {
 	bind();
 	unsigned int location = glGetUniformLocation(m_programID, name.c_str());
 	glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
 }
-
+void Program::setUniform(std::string name, glm::mat3 value) {
+	bind();
+	unsigned int location = glGetUniformLocation(m_programID, name.c_str());
+	glUniformMatrix3fv(location, 1, GL_FALSE, &value[0][0]);
+}
 void Program::setUniform(std::string name, glm::vec4 value) {
 	bind();
 	unsigned int location = glGetUniformLocation(m_programID, name.c_str());

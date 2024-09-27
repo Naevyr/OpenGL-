@@ -8,17 +8,10 @@
 
 class Program {
 public:
-	class STANDARD {
-	public:
-		inline static const std::filesystem::path VERTEX =
-			"resources/shaders/standard.vert";
-
-		inline static const std::filesystem::path FRAGMENT =
-			"resources/shaders/fragment.vert";
-	};
+	class DefaultPrograms;
 
 protected:
-	unsigned int m_programID;
+	GLuint m_programID;
 
 public:
 	Program(std::filesystem::path vertex, std::filesystem::path fragment);
@@ -27,7 +20,9 @@ public:
 
 	void bind() const;
 
-	void setUniform(std::string name, glm::mat4 value) const;
+	void setUniform(std::string name, glm::mat4 value);
+	void setUniform(std::string name, glm::mat3 value);
+
 	void setUniform(std::string name, glm::vec4 value);
 	void setUniform(std::string name, glm::vec3 value);
 	void setUniform(std::string name, glm::vec2 value);
@@ -36,4 +31,40 @@ public:
 	void setUniform(std::string name, Texture& value);
 
 	void setUBO(std::string name, unsigned int UBO);
+};
+
+class Program::DefaultPrograms {
+public:
+	class STANDARD_FORWARD {
+	public:
+		inline static const std::filesystem::path VERTEX =
+			"resources/shaders/standard.vert";
+
+		inline static const std::filesystem::path FRAGMENT =
+			"resources/shaders/fragment.vert";
+	};
+	class SHADOWMAP {
+	public:
+		inline static const std::filesystem::path VERTEX =
+			"resources/shaders/shadow.vert";
+
+		inline static const std::filesystem::path FRAGMENT =
+			"resources/shaders/shadow.vert";
+	};
+	class SKYBOX {
+	public:
+		inline static const std::filesystem::path VERTEX =
+			"resources/shaders/skybox.vert";
+
+		inline static const std::filesystem::path FRAGMENT =
+			"resources/shaders/skybox.vert";
+	};
+	class QUAD {
+	public:
+		inline static const std::filesystem::path VERTEX =
+			"resources/shaders/quad.vert";
+
+		inline static const std::filesystem::path FRAGMENT =
+			"resources/shaders/quad.vert";
+	};
 };

@@ -23,11 +23,11 @@ Renderer::Renderer(int width, int height) {
 	glDepthFunc(GL_LESS);
 	glDepthMask(GL_TRUE);
 
-	m_TextureManager = std::make_shared<TextureManager>();
+	m_resourceManager = std::make_shared<TextureManager>();
 
-	m_pipeline = std::make_unique<ForwardPipeline>(m_TextureManager);
+	m_pipeline = std::make_unique<ForwardPipeline>(m_resourceManager);
 
-	m_bloom = HDRBloom(m_TextureManager);
+	m_bloom = HDRBloom(m_resourceManager);
 
 	TextureManager::RuntimeTextureSpecification framebufferSpecs;
 	framebufferSpecs.width = width;
@@ -36,8 +36,8 @@ Renderer::Renderer(int width, int height) {
 	framebufferSpecs.encoding = GL_FLOAT;
 	framebufferSpecs.resolution_group = 0;
 
-	m_framebufferColor = m_TextureManager->createTexture(framebufferSpecs);
-	m_temporaryBuffer = m_TextureManager->createTexture(framebufferSpecs);
+	m_framebufferColor = m_resourceManager->createTexture(framebufferSpecs);
+	m_temporaryBuffer = m_resourceManager->createTexture(framebufferSpecs);
 
 	TextureManager::RuntimeTextureSpecification depth_specs;
 
@@ -49,20 +49,20 @@ Renderer::Renderer(int width, int height) {
 	depth_specs.internal_format = GL_DEPTH_COMPONENT;
 	depth_specs.resolution_group = 0;
 
-	m_framebufferDepth = m_TextureManager->createTexture(depth_specs);
+	m_framebufferDepth = m_resourceManager->createTexture(depth_specs);
 
 	glGenFramebuffers(1, &m_mainPassFBO);
 }
 
 Scene& Renderer::loadScene(SceneDescription& description) {
-	m_currentScene = Scene(description, m_TextureManager);
+	m_currentScene = Scene(description, m_resourceManager);
 	return m_currentScene.value();
 };
 
 void Renderer::render() {
-	Texture& fbColor = m_TextureManager->getTexture(m_framebufferColor);
-	Texture& fbDepth = m_TextureManager->getTexture(m_framebufferDepth);
-	Texture& tmp = m_TextureManager->getTexture(m_temporaryBuffer);
+	Texture& fbColor = m_resourceManager->getTexture(m_framebufferColor);
+	Texture& fbDepth = m_resourceManager->getTexture(m_framebufferDepth);
+	Texture& tmp = m_resourceManager->getTexture(m_temporaryBuffer);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, m_mainPassFBO);
 	glFramebufferTexture(
@@ -98,7 +98,7 @@ void Renderer::render() {
 		GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, fbDepth.getID(), 0
 	);
 
-	Renderer::DrawQuad(m_TextureManager->getTexture(m_framebufferColor));
+	Renderer::DrawQuad(m_resourceManager->getTexture(m_framebufferColor));
 }
 
 void Renderer::setResolution(int width, int height) {

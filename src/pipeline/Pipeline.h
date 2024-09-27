@@ -36,4 +36,3 @@ struct Pipeline::RenderSpecifications {
 	TextureHandle colorTexture;
 	TextureHandle depthTexture;
 };
-

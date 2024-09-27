@@ -1,31 +1,32 @@
 #pragma once
 
 #include "TextureManager.h"
+#include "glad/glad.h"
 
 class Texture {
 private:
-	unsigned int m_textureID;
-	unsigned int m_textureBindlessHandle;
+	GLuint m_textureID;
+	GLuint m_textureBindlessHandle;
 
-	unsigned int m_textureType;
+	GLenum m_textureType;
 
-	unsigned int m_format;
-	unsigned int m_internalFormat;
+	GLenum m_format;
+	GLenum m_internalFormat;
 
-	int m_width;
-	int m_height;
+	GLsizei m_width;
+	GLsizei m_height;
 
 public:
 	friend class TextureManager;
 
 	inline Texture() {}
 
-	inline unsigned int getHandle() const { return m_textureBindlessHandle; }
-	inline unsigned int getID() const { return m_textureID; }
-	inline int getWidth() const { return m_width; }
-	inline int getHeight() const { return m_height; }
-	inline unsigned int getFormat() const { return m_format; }
-	inline unsigned int getInternalFormat() const { return m_internalFormat; }
+	inline GLuint getHandle() const { return m_textureBindlessHandle; }
+	inline GLuint getID() const { return m_textureID; }
+	inline GLsizei getWidth() const { return m_width; }
+	inline GLsizei getHeight() const { return m_height; }
+	inline GLenum getFormat() const { return m_format; }
+	inline GLenum getInternalFormat() const { return m_internalFormat; }
 
-	inline unsigned int getType() const { return m_textureType; }
+	inline GLenum getType() const { return m_textureType; }
 };
